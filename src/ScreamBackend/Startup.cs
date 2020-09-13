@@ -32,7 +32,7 @@ namespace ScreamBackend
             {
                 options.UseMySql(Configuration.GetConnectionString("Scream-MySQL"));
             });
-            services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
+            services.AddIdentity<DB.Tables.User, IdentityRole<int>>()
                     .AddEntityFrameworkStores<DB.ScreamDB>();
 
             services.Configure<IdentityOptions>(optiens =>
