@@ -1,25 +1,19 @@
-using NUnit.Framework;
-using Moq;
 using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using System.Threading.Tasks;
+using Xunit;
 
-namespace TestControllers
+namespace IntegrationTests
 {
-    public class Tests
+    public class AccountsTest
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
-        [Test]
+        [Fact]
         public void TestRegisterAsync()
         {
             var userStore = new Mock<IUserStore<ScreamBackend.DB.Tables.User>>();
-            
+
             var userManagerMock = new Mock<UserManager<ScreamBackend.DB.Tables.User>>(userStore.Object, null, null, null, null, null, null, null, null);
 
             ScreamBackend.DB.Tables.User userModel = new ScreamBackend.DB.Tables.User
@@ -43,10 +37,10 @@ namespace TestControllers
                 );
 
             var result = accounts.RegisterAsync("");
-            Assert.IsTrue(result.GetType().Equals(typeof(BadRequestObjectResult)));
+            Assert.IsType<BadRequestObjectResult>(result);
 
             result = accounts.RegisterAsync("not empty");
-            Assert.IsTrue(result.GetType().Equals(typeof(OkResult)));
+            Assert.IsType<OkResult>(result);
         }
     }
 }
