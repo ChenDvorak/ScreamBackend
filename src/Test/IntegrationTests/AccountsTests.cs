@@ -3,16 +3,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Sqlite;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace IntegrationTests
 {
-    public class AccountsTests: IClassFixture<WebApplicationFactory<ScreamBackend.Startup>>
+    public class AccountsTests: DatabeseSeedTest, IClassFixture<WebApplicationFactory<ScreamBackend.Startup>>
     {
         private readonly WebApplicationFactory<ScreamBackend.Startup> _factory;
         public AccountsTests(WebApplicationFactory<ScreamBackend.Startup> _factory)
+            :base(new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
+                 .UseSqlite("Filename=Test.db")
+                 .Options)
         {
             this._factory = _factory;
         }
