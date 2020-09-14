@@ -35,9 +35,25 @@ namespace ScreamBackend
             services.AddIdentity<DB.Tables.User, IdentityRole<int>>()
                     .AddEntityFrameworkStores<DB.ScreamDB>();
 
-            services.Configure<IdentityOptions>(optiens =>
+            services.Configure<IdentityOptions>(options =>
             {
+                options.Password.RequiredLength = 6;
+
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
             });
+
+            services.ConfigureApplicationCookie(options => 
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                options.SlidingExpiration = true;
+            });
+
             services.AddControllers();
         }
 
@@ -53,6 +69,7 @@ namespace ScreamBackend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
