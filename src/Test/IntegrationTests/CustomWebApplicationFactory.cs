@@ -9,7 +9,11 @@ using System.Threading.Tasks;
 
 namespace IntegrationTests
 {
-    public class InMemoryWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TStartup"></typeparam>
+    public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -20,16 +24,26 @@ namespace IntegrationTests
 
                 services.AddDbContext<ScreamBackend.DB.ScreamDB>(options =>
                 {
-                    options.UseInMemoryDatabase("Scream_InMemory");
+                    options.UseSqlite("Filename:Scream");
                 });
 
                 var sp = services.BuildServiceProvider();
 
-                using (var scope = sp.CreateScope())
-                {
-                    
-                }
+                using var scope = sp.CreateScope();
+                var scopedServices = scope.ServiceProvider;
 
+                var db = scopedServices.GetRequiredService<ScreamBackend.DB.ScreamDB>();
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                try
+                {
+                    new InitializeDb(db).Init();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
             });
         }
     }
