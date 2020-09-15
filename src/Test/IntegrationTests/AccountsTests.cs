@@ -10,13 +10,10 @@ using Xunit;
 
 namespace IntegrationTests
 {
-    public class AccountsTests: DatabeseSeedTest, IClassFixture<WebApplicationFactory<ScreamBackend.Startup>>
+    public class AccountsTests: IClassFixture<CustomWebApplicationFactory<ScreamBackend.Startup>>
     {
-        private readonly WebApplicationFactory<ScreamBackend.Startup> _factory;
-        public AccountsTests(WebApplicationFactory<ScreamBackend.Startup> _factory)
-            :base(new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
-                 .UseSqlite("Filename=Test.db")
-                 .Options)
+        private readonly CustomWebApplicationFactory<ScreamBackend.Startup> _factory;
+        public AccountsTests(CustomWebApplicationFactory<ScreamBackend.Startup> _factory)
         {
             this._factory = _factory;
         }
