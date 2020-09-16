@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Screams
 {
@@ -9,6 +10,10 @@ namespace Screams
     /// </summary>
     public interface IScreamsManager
     {
-        public async 
+
+        public async Task<ScreamPaging> GetScreams(Infrastructures.Paging<ScreamPaging.ScreamItem> paging)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
