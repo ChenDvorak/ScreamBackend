@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Screams
 {
     /// <summary>
     /// quice result
+    /// use this to quick instance a scream result
     /// </summary>
-    public static class Result
+    public static class QuickResult
     {
         /// <summary>
         /// quice get a success scream result without data
         /// </summary>
         /// <returns></returns>
-        public static ScreamResult<object> Successful() => new ScreamResult<object>(success: true);
+        public static ScreamResult Successful() => new ScreamResult(success: true);
         /// <summary>
         /// quice get a success scream result with data
         /// </summary>
@@ -30,9 +29,9 @@ namespace Screams
         /// quice get a unsuccess scream result without data
         /// </summary>
         /// <returns></returns>
-        public static ScreamResult<object> Unsuccessful(params string[] errors)
+        public static ScreamResult Unsuccessful(params string[] errors)
         {
-            var result = new ScreamResult<object>(success: false)
+            var result = new ScreamResult(success: false)
             {
                 Errors = errors?.ToList() ?? new List<string>(0)
             };
@@ -52,12 +51,20 @@ namespace Screams
             return result;
         }
     }
+
+    /*
+     *  there are tow scream result follow the code
+     *  obviously difference only the property that named Data
+     *  ScreamResult without result data
+     *  ScreamResult<T> within result data
+     */
+
     /// <summary>
-    /// the result from scream process
+    /// the result from scream process without result data
     /// </summary>
-    public class ScreamResult<T>
+    public class ScreamResult
     {
-        internal ScreamResult(bool success) 
+        internal ScreamResult(bool success)
         {
             Successed = success;
         }
@@ -66,12 +73,22 @@ namespace Screams
         /// </summary>
         public bool Successed { get; } = false;
         /// <summary>
-        /// result data if necessary
-        /// </summary>
-        public T Data { get; internal set; }
-        /// <summary>
         /// error informations if result unseccessful
         /// </summary>
         public List<string> Errors { get; internal set; }
+    }
+
+    /// <summary>
+    /// the result from scream process within result data
+    /// </summary>
+    public class ScreamResult<T> : ScreamResult
+    {
+        internal ScreamResult(bool success) : base(success)
+        { }
+
+        /// <summary>
+        /// result data if necessary
+        /// </summary>
+        public T Data { get; internal set; }
     }
 }

@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ *  Paging
+ *  There is abstract Paging class.
+ *  Inherit this which need paging of request parameters or response data
+ */
+
+using System;
 using System.Collections.Generic;
 
 namespace Infrastructures
@@ -13,6 +19,10 @@ namespace Infrastructures
         {
             Index = index;
             Size = size;
+        }
+        protected Paging(int index, int size, int capacity): this(index, size)
+        {
+            _params = new Dictionary<string, string>(capacity);
         }
 
         public string this[string key]

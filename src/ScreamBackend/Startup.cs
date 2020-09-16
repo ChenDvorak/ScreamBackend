@@ -54,6 +54,8 @@ namespace ScreamBackend
                 options.SlidingExpiration = true;
             });
 
+            services.AddScoped<Screams.IScreamsManager, Screams.DefaultScreamsManager>();
+
             services.AddControllers();
         }
 

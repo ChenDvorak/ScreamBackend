@@ -9,7 +9,7 @@ namespace Screams
     /// </summary>
     public class ScreamPaging: Infrastructures.Paging<ScreamPaging.ScreamItem>
     {
-        private ScreamPaging(int index, int size, int capacity = 0) : base(index, size)
+        private ScreamPaging(int index, int size, int capacity = 0) : base(index, size, capacity)
         { }
 
         public ScreamPaging Create(int index, int size = 20, int capacity = 0)

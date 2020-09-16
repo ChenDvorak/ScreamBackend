@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DB\DB.csproj" />
+    <ProjectReference Include="..\Screams\Screams.csproj" />
   </ItemGroup>
 
 
