@@ -66,7 +66,11 @@ namespace ScreamBackend
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            else
+            {
+                app.UseMiddleware<Middlewares.ExceptionHandlerMiddleware>();
+                app.UseHsts();
+            }
             app.UseHttpsRedirection();
 
             app.UseRouting();
