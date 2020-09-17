@@ -21,7 +21,7 @@ namespace Screams
         /// </summary>
         /// <param name="model">the parameter what post need</param>
         /// <returns>the result that post</returns>
-        public Task<ScreamResult<ScreamPaging.ScreamItem>> PostScreamAsync(Models.NewScreamtion model);
+        public Task<ScreamResult<int>> PostScreamAsync(Models.NewScreamtion model);
         /// <summary>
         /// remove a scream
         /// </summary>

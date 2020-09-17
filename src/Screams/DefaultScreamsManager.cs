@@ -8,7 +8,7 @@ namespace Screams
 {
     public class DefaultScreamsManager : IScreamsManager
     {
-        public Task<ScreamResult<ScreamPaging.ScreamItem>> PostScreamAsync(Models.NewScreamtion model)
+        public Task<ScreamResult<int>> PostScreamAsync(Models.NewScreamtion model)
         {
             throw new NotImplementedException();
         }
