@@ -35,7 +35,9 @@ namespace ScreamBackend.Middlewares
                     context.Response.Headers[HeaderNames.CacheControl] = "no-cache";
                     context.Response.Headers[HeaderNames.Pragma] = "no-cache";
                     context.Response.Headers[HeaderNames.Expires] = "-1";
+                    context.Response.Headers[HeaderNames.ContentType] = "text/plain;charset=utf-8";
                     context.Response.Headers.Remove(HeaderNames.ETag);
+                    await context.Response.WriteAsync("服务器繁忙", System.Text.Encoding.UTF8);
                     return;
                 }
                 catch (Exception ex2)
