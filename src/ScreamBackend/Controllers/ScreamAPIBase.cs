@@ -13,5 +13,13 @@ namespace ScreamBackend.Controllers
     public class ScreamAPIBase : ControllerBase
     {
         protected const string ERRORS = "errors";
+
+        protected void ParseModelStateErrors(ICollection<string> errors)
+        {
+            foreach (string error in errors)
+            {
+                ModelState.AddModelError(ERRORS, error);
+            }
+        }
     }
 }

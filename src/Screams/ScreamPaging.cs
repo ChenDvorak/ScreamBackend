@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Screams
+﻿namespace Screams
 {
     /// <summary>
     /// this is a  paging of scream
@@ -12,9 +8,9 @@ namespace Screams
         private ScreamPaging(int index, int size, int capacity = 0) : base(index, size, capacity)
         { }
 
-        public ScreamPaging Create(int index, int size = 20, int capacity = 0)
+        public static ScreamPaging Create(int index, int size = 20, int capacity = 0)
         {
-            return new ScreamPaging(index, size, capacity);
+            return new ScreamPaging(index <= 0 ? 1 : index, size < 0 ? 0 : size, capacity);
         }
 
         /// <summary>

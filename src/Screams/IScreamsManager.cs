@@ -15,7 +15,7 @@ namespace Screams
         /// </summary>
         /// <param name="paging"></param>
         /// <returns></returns>
-        public Task<ScreamPaging> GetScreamsAsync(Infrastructures.Paging<ScreamPaging.ScreamItem> paging);
+        public Task<ScreamResult<ScreamPaging>> GetScreamsAsync(Infrastructures.Paging<ScreamPaging.ScreamItem> paging);
         /// <summary>
         /// post a new scream
         /// </summary>
