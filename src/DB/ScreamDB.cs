@@ -9,6 +9,10 @@ namespace ScreamBackend.DB
         public ScreamDB(DbContextOptions options) : base(options)
         {
         }
+        /// <summary>
+        /// Screams table
+        /// </summary>
+        public DbSet<Tables.Scream> Screams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

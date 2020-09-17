@@ -21,6 +21,8 @@
             public int Id { get; set; }
             public int ScreamerId { get; set; }
             public string Screamer { get; set; }
+            public string Content { get; set; }
+            public string DateTime { get; set; }
         }
     }
 }
