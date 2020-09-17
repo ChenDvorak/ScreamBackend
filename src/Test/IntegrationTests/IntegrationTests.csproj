@@ -24,7 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructures\Infrastructures.csproj" />
     <ProjectReference Include="..\..\ScreamBackend\ScreamBackend.csproj" />
+    <ProjectReference Include="..\..\Screams\Screams.csproj" />
   </ItemGroup>
 
 </Project>
