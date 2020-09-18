@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Screams
 {
@@ -13,9 +12,9 @@ namespace Screams
         /// </summary>
         public struct NewScreamtion
         {
-            [Required]
+            [Required, Range(1, int.MaxValue, ErrorMessage = "发布人参数有误")]
             public int ScreamerId { get; set; }
-            [Required, MinLength(5), DisplayName("内容至少5个字")]
+            [Required(ErrorMessage = "内容至少5个字"), MinLength(5)]
             public string Content { get; set; }
         }
     }
