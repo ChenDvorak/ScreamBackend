@@ -54,7 +54,7 @@ namespace ScreamBackend
                 options.ExpireTimeSpan = TimeSpan.FromDays(30);
                 options.SlidingExpiration = true;
             });
-
+            //  Redis Database
             services.RedisInit(Configuration.GetConnectionString("redis"));
 
             services.AddScoped<Screams.IScreamsManager, Screams.DefaultScreamsManager>();

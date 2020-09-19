@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using StackExchange.Redis;
 
 namespace Infrastructures
 {
@@ -13,7 +11,7 @@ namespace Infrastructures
         /// <param name="services"></param>
         public static void RedisInit(this IServiceCollection services, string connectionString)
         {
-            RedisCache.Init(connectionString);
+            services.AddSingleton(ConnectionMultiplexer.Connect(connectionString));
         }
     }
 }
