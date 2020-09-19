@@ -14,5 +14,6 @@ namespace ScreamBackend.DB.Tables
         public bool IsAdmin { get; set; } = false;
         [Required]
         public DateTime CreateDateTime { get; set; } = DateTime.Now;
+        public string Avatar { get; set; } = "";
     }
 }

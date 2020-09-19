@@ -12,6 +12,8 @@ namespace Screams
 {
     public class DefaultScreamsManager : IScreamsManager
     {
+        private const int LIST_CONTENT_LIMIT_LENGTH = 50;
+
         private readonly ScreamDB _db;
         public DefaultScreamsManager(ScreamDB db)
         {
@@ -20,7 +22,7 @@ namespace Screams
 
         public async Task<ScreamResult<int>> PostScreamAsync(Models.NewScreamtion model)
         {
-            var newScream = new Scream
+            var newScream = new ScreamBackend.DB.Tables.Scream
             { 
                 Author = model.Author,
                 Content = model.Content,
@@ -33,7 +35,7 @@ namespace Screams
             throw new Exception("发布失败");
         }
 
-        public Task<ScreamResult> RemoveAsync(Screamtion screamtion)
+        public Task<ScreamResult> RemoveAsync(Scream screamtion)
         {
             throw new NotImplementedException();
         }
@@ -44,7 +46,7 @@ namespace Screams
         /// <param name="index"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public async Task<ScreamResult<Screams>> GetScreamsAsync(int index, int size)
+        public async Task<Screams> GetScreamsAsync(int index, int size)
         {
             var screamsPaging = Screams.Create(index, size);
 
@@ -66,15 +68,19 @@ namespace Screams
                                            .ToListAsync();
             screamsPaging.TotalSize = await _db.Screams.CountAsync(s => !s.Hidden);
 
-            return QuickResult.Successful(screamsPaging); ;
+            return screamsPaging;
         }
 
         private string BuildSQL()
         {
-            return @"SELECT * FROM SCREAM";
+            return $@"SELECT 
+Id, AuthorId, 
+IF(CHAR_LENGTH(Content) > {LIST_CONTENT_LIMIT_LENGTH}, concat(left(content, {LIST_CONTENT_LIMIT_LENGTH}), '{LIST_CONTENT_LIMIT_LENGTH}'), Content) as Content,
+HiddenCount, Hidden, AuditorId, CreateDate
+FROM SCREAM";
         }
 
-        public Task<Screamtion> GetScream(int screamId)
+        public Task<Scream> GetScream(int screamId)
         {
             throw new NotImplementedException();
         }

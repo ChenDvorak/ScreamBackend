@@ -15,13 +15,13 @@ namespace Screams
         /// </summary>
         /// <param name="streamId"></param>
         /// <returns></returns>
-        Task<Screamtion> GetScream(int screamId);
+        Task<Scream> GetScream(int screamId);
         /// <summary>
         /// get scream list of paging
         /// </summary>
         /// <param name="paging"></param>
         /// <returns></returns>
-        Task<ScreamResult<Screams>> GetScreamsAsync(int index, int size);
+        Task<Screams> GetScreamsAsync(int index, int size);
         /// <summary>
         /// post a new scream
         /// </summary>
@@ -33,6 +33,6 @@ namespace Screams
         /// </summary>
         /// <param name="screamtion"></param>
         /// <returns></returns>
-        Task<ScreamResult> RemoveAsync(Screamtion screamtion);
+        Task<ScreamResult> RemoveAsync(Scream screamtion);
     }
 }
