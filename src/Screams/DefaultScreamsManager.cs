@@ -20,13 +20,9 @@ namespace Screams
 
         public async Task<ScreamResult<int>> PostScreamAsync(Models.NewScreamtion model)
         {
-            var screamer = await _db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == model.ScreamerId);
-            if (screamer == null)
-                return QuickResult.Unsuccessful(0, "作者不存在");
-
             var newScream = new Scream
             { 
-                Screamer = screamer,
+                Author = model.Author,
                 Content = model.Content,
                 CreateDate = DateTime.Now
             };
@@ -42,26 +38,45 @@ namespace Screams
             throw new NotImplementedException();
         }
 
-        public async Task<ScreamResult<ScreamPaging>> GetScreamsAsync(Paging<ScreamPaging.ScreamItem> paging)
+        /// <summary>
+        /// get scream list with paging
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public async Task<ScreamResult<Screams>> GetScreamsAsync(int index, int size)
         {
-            paging.List = await _db.Screams.AsNoTracking()
+            var screamsPaging = Screams.Create(index, size);
+
+            screamsPaging.List = await _db.Screams.FromSqlRaw(BuildSQL())
+                                           .AsNoTracking()
                                            .OrderByDescending(scream => scream.CreateDate)
                                            .Where(s => !s.Hidden)
-                                           .Skip(paging.Skip)
-                                           .Take(paging.Size)
-                                           .Include(s => s.Screamer)
-                                           .Select(s => new ScreamPaging.ScreamItem
+                                           .Skip(screamsPaging.Skip)
+                                           .Take(screamsPaging.Size)
+                                           .Include(s => s.Author)
+                                           .Select(s => new Screams.SingleItem
                                            { 
                                                Id = s.Id,
-                                               ScreamerId = s.ScreamerId,
-                                               Screamer = s.Screamer.UserName,
+                                               AuthorId = s.AuthorId,
+                                               Author = s.Author.UserName,
                                                Content = s.Content,
                                                DateTime = s.CreateDate.ToShortDateString()
                                            })
                                            .ToListAsync();
-            paging.TotalSize = await _db.Screams.CountAsync(s => !s.Hidden);
+            screamsPaging.TotalSize = await _db.Screams.CountAsync(s => !s.Hidden);
 
-            return QuickResult.Successful(paging as ScreamPaging); ;
+            return QuickResult.Successful(screamsPaging); ;
+        }
+
+        private string BuildSQL()
+        {
+            return @"SELECT * FROM SCREAM";
+        }
+
+        public Task<Screamtion> GetScream(int screamId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

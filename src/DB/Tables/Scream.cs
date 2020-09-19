@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ScreamBackend.DB.Tables
 {
-    public class Scream: EntityBase
+    public class Scream : EntityBase
     {
         [Required]
-        public int ScreamerId { get; set; }
-        public User Screamer { get; set; }
+        public int AuthorId { get; set; }
+        public User Author { get; set; }
         [Required]
         public string Content { get; set; } = "";
         [Required]

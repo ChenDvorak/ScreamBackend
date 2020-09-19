@@ -5,14 +5,15 @@ namespace ScreamBackend.DB.Tables
     public class Comment: EntityBase
     {
         [Required]
-        public int CommenterId { get; set; }
-        public User Commenter { get; set; }
+        public int AuthorId { get; set; }
         [Required]
         public string Content { get; set; }
         [Required]
         public int AuditorId { get; set; }
-        public User Auditor { get; set; }
         [Required]
         public int HiddenCount { get; set; } = 0;
+        [Required]
+        public bool Hidden { get; set; } = false;
+        public int ScreamId { get; set; }
     }
 }

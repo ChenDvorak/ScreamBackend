@@ -38,8 +38,8 @@ namespace ScreamBackend.Controllers.ScreamsManager
         [HttpGet]
         public async Task<IActionResult> GetScreamsAsync(int index, int size)
         {
-            var paging = Screams.ScreamPaging.Create(index, size);
-            var result = await _screamsManager.GetScreamsAsync(paging);
+            var paging = Screams.Screams.Create(index, size);
+            var result = await _screamsManager.GetScreamsAsync(index, size);
             if (result.Successed)
             {
                 paging = result.Data;
@@ -66,10 +66,14 @@ namespace ScreamBackend.Controllers.ScreamsManager
         [HttpPost, Authorize]
         public async Task<IActionResult> PostNewScreamAsync([FromBody]Screams.Models.NewScreamtion model)
         {
-            if (!int.TryParse(_userManager.GetUserId(User), out int userId))
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userModel = await _userManager.GetUserAsync(User);
+            if (userModel == null)
                 return Unauthorized();
 
-            model.ScreamerId = userId;
+            model.Author = userModel;
 
             var result = await _screamsManager.PostScreamAsync(model);
             if (result.Successed)
