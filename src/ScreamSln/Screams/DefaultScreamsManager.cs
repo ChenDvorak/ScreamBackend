@@ -1,7 +1,9 @@
 ﻿using Infrastructures;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ScreamBackend.DB;
 using ScreamBackend.DB.Tables;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +17,17 @@ namespace Screams
         private const int LIST_CONTENT_LIMIT_LENGTH = 50;
 
         private readonly ScreamDB _db;
-        public DefaultScreamsManager(ScreamDB db)
+        private readonly IDatabase _redis;
+        public DefaultScreamsManager(ScreamDB db, ConnectionMultiplexer redis)
         {
             _db = db;
+            _redis = redis.GetDatabase();
         }
 
         public async Task<ScreamResult<int>> PostScreamAsync(Models.NewScreamtion model)
         {
             var newScream = new ScreamBackend.DB.Tables.Scream
-            { 
+            {
                 Author = model.Author,
                 Content = model.Content,
                 CreateDate = DateTime.Now
@@ -35,9 +39,22 @@ namespace Screams
             throw new Exception("发布失败");
         }
 
-        public Task<ScreamResult> RemoveAsync(Scream screamtion)
+        public async Task<ScreamResult> RemoveAsync(Scream scream)
         {
-            throw new NotImplementedException();
+            if (scream == null || scream.Model == null)
+                throw new NullReferenceException("scream can't be null");
+
+            var comments = await _db.Comments.AsNoTracking().Where(c => c.ScreamId == scream.Model.Id).ToListAsync();
+            _db.Comments.RemoveRange(comments);
+            _db.Screams.Remove(scream.Model);
+
+            int effects = await _db.SaveChangesAsync();
+            if (effects == comments.Count + 1)
+            {
+                await _redis.KeyDeleteAsync(scream.Cache_Key);
+                return QuickResult.Successful();
+            }
+            return QuickResult.Unsuccessful("Delete scream fail");
         }
 
         /// <summary>
@@ -58,7 +75,7 @@ namespace Screams
                                            .Take(screamsPaging.Size)
                                            .Include(s => s.Author)
                                            .Select(s => new Screams.SingleItem
-                                           { 
+                                           {
                                                Id = s.Id,
                                                AuthorId = s.AuthorId,
                                                Author = s.Author.UserName,
@@ -73,16 +90,50 @@ namespace Screams
 
         private string BuildSQL()
         {
+            const string CONTENT = nameof(ScreamBackend.DB.Tables.Scream.Content);
+
             return $@"SELECT 
-Id, AuthorId, 
-IF(CHAR_LENGTH(Content) > {LIST_CONTENT_LIMIT_LENGTH}, concat(left(content, {LIST_CONTENT_LIMIT_LENGTH}), '{LIST_CONTENT_LIMIT_LENGTH}'), Content) as Content,
-HiddenCount, Hidden, AuditorId, CreateDate
-FROM SCREAM";
+                    {nameof(ScreamBackend.DB.Tables.Scream.Id)}, 
+                    {nameof(ScreamBackend.DB.Tables.Scream.AuthorId)}, 
+                    IF(CHAR_LENGTH({CONTENT}) > {LIST_CONTENT_LIMIT_LENGTH}, concat(left({CONTENT}, {LIST_CONTENT_LIMIT_LENGTH}), '{LIST_CONTENT_LIMIT_LENGTH}'), {CONTENT}) as {CONTENT},
+                    {nameof(ScreamBackend.DB.Tables.Scream.HiddenCount)}, 
+                    {nameof(ScreamBackend.DB.Tables.Scream.Hidden)}, 
+                    {nameof(ScreamBackend.DB.Tables.Scream.AuditorId)}, 
+                    {nameof(ScreamBackend.DB.Tables.Scream.CreateDate)}
+                    FROM 
+                    {nameof(ScreamDB.Screams)}";
         }
 
-        public Task<Scream> GetScream(int screamId)
+        /// <summary>
+        /// get the subject of scream
+        /// </summary>
+        /// <param name="screamId"></param>
+        /// <returns></returns>
+        public async Task<Scream> GetScream(int screamId)
         {
-            throw new NotImplementedException();
+            if (!Scream.IsValidId(screamId))
+                return null;
+
+            string redisValue;
+            string currentKey = Scream.GetCacheKey(screamId);
+            Scream result = null;
+            
+            if (await _redis.KeyExistsAsync(currentKey))
+            {
+                redisValue = await _redis.StringGetAsync(currentKey);
+                result = JsonConvert.DeserializeObject<Scream>(redisValue);
+            }
+            else
+            {
+                var model = await _db.Screams.AsNoTracking().SingleOrDefaultAsync(s => s.Id == screamId);
+                if (model == null)
+                    return null;
+                result = Scream.Parse(model);
+                redisValue = JsonConvert.SerializeObject(result);
+                await _redis.StringSetAsync(key: currentKey, redisValue);
+            }
+            await _redis.KeyExpireAsync(currentKey, TimeSpan.FromHours(1));
+            return result;
         }
     }
 }

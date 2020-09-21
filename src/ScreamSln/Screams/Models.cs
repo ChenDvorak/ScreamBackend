@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Screams
 {
     /// <summary>
-    /// model of scream
+    /// scream model 
     /// </summary>
     public class Models
     {

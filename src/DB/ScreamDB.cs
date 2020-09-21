@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ScreamBackend.DB.Tables;
 
 namespace ScreamBackend.DB
 {
@@ -20,6 +21,7 @@ namespace ScreamBackend.DB
         /// Screams table
         /// </summary>
         public DbSet<Tables.Scream> Screams { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
