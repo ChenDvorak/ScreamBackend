@@ -39,7 +39,8 @@ namespace Screams
             {
                 Author = model.Author,
                 Content = model.Content,
-                CreateDate = DateTime.Now
+                CreateDate = DateTime.Now,
+                State = (int)Scream.Status.WaitAudit
             };
             await _db.Screams.AddAsync(newScream);
             int effects = await _db.SaveChangesAsync();

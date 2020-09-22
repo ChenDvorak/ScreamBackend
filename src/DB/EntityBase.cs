@@ -10,6 +10,8 @@ namespace ScreamBackend.DB
     {
         [Key]
         public int Id { get; set; }
+        [Required]
+        public int State { get; set; } = 0;
         public DateTime CreateDate { get; set; } = DateTime.Now;
     }
 }

@@ -14,6 +14,18 @@ namespace Screams
 
         private const string CACHE_KEY_PREFIX = "d3338d92-18d3-4e87-87fd-fbe79e2a6daa";
         internal readonly string Cache_Key;
+
+        /// <summary>
+        /// scream's state
+        /// </summary>
+        [Flags]
+        public enum Status
+        {
+            WaitAudit = 0 << 1,
+            Passed = 0 << 2,
+            Recycle = 0 << 3,
+        }
+
         /// <summary>
         /// instance from database model
         /// </summary>
