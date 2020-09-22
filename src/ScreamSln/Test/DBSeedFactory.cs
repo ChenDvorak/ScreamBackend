@@ -5,24 +5,124 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Test
 {
-    public class DBSeedFactory: IDisposable
+    /// <summary>
+    /// Base class of initialize database both InMemory and Redis
+    /// </summary>
+    public abstract class DBSeedFactory : IDisposable
     {
-        protected ScreamBackend.DB.ScreamDB _db;
         private bool disposedValue;
+        /// <summary>
+        /// InMemor Database
+        /// </summary>
+        protected ScreamBackend.DB.ScreamDB _db;
+        /// <summary>
+        /// The Faker User to test
+        /// </summary>
+        protected ScreamBackend.DB.Tables.User FakerUser;
+        /// <summary>
+        /// Redis
+        /// </summary>
+        protected readonly StackExchange.Redis.ConnectionMultiplexer redisConn;
 
         public DBSeedFactory()
         {
-
+            redisConn = StackExchange.Redis.ConnectionMultiplexer.Connect("localhost");
             SeedInit();
         }
-
+        /// <summary>
+        /// Initial InMemory database
+        /// There will create a faker user in database
+        /// </summary>
         private void SeedInit()
         {
             _db = new ScreamBackend.DB.ScreamDB(
                 new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
                     .UseInMemoryDatabase("scream").Options
             );
+
+            FakerUser = new ScreamBackend.DB.Tables.User
+            {
+                UserName = "Dvorak",
+                NormalizedUserName = "DVORAK",
+                Email = "dvorak@outlook.com",
+                NormalizedEmail = "DVORAK@OUTLOOK.COM",
+                IsAdmin = false,
+                CreateDateTime = DateTime.Now,
+                Avatar = ""
+            };
+
+            _db.Users.Add(FakerUser);
+
+            _db.Screams.AddRange(ScreamModels);
+
+            int effects = _db.SaveChanges();
+            if (effects != (1 + ScreamModels.Count))
+                throw new Exception("Initializ user fail");
         }
+
+        private List<ScreamBackend.DB.Tables.Scream> ScreamModels => new List<ScreamBackend.DB.Tables.Scream>
+        { 
+            new ScreamBackend.DB.Tables.Scream
+            { 
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_1"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_2"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_3"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_4"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_5"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_6"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_7"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_8"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_9"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_10"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_11"
+            },
+            new ScreamBackend.DB.Tables.Scream
+            {
+                Author = FakerUser,
+                Content = "TEST: SCREAM ITEM_12"
+            },
+        };
 
         protected virtual void Dispose(bool disposing)
         {

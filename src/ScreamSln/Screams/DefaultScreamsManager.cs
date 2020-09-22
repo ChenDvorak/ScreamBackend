@@ -26,10 +26,14 @@ namespace Screams
 
         public async Task<ScreamResult<int>> PostScreamAsync(Models.NewScreamtion model)
         {
+            const int NOT_DATA = 0;
             if (model.Author == null)
-                return QuickResult.Unsuccessful(0, "作者不能为空");
+                return QuickResult.Unsuccessful(NOT_DATA, "作者不能为空");
             if (string.IsNullOrWhiteSpace(model.Content))
-                return QuickResult.Unsuccessful(0, "内容不能为空");
+                return QuickResult.Unsuccessful(NOT_DATA, "内容不能为空");
+
+            if (!await _db.Users.AnyAsync(user => user.Id == model.Author.Id))
+                return QuickResult.Unsuccessful(NOT_DATA, "该作者不存在");
 
             var newScream = new ScreamBackend.DB.Tables.Scream
             {
