@@ -58,6 +58,13 @@ namespace Test
                 _db.Screams.AddRange(ScreamModels);
 
             _db.SaveChanges();
+            foreach (var item in _db.ChangeTracker.Entries())
+            {
+                if (item == null)
+                    continue;
+                item.State = EntityState.Detached;
+            }
+            
         }
 
         /// <summary>
