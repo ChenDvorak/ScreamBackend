@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,11 +14,25 @@ namespace Screams
 
         private const string CACHE_KEY_PREFIX = "d3338d92-18d3-4e87-87fd-fbe79e2a6daa";
         internal readonly string Cache_Key;
+        /// <summary>
+        /// instance from database model
+        /// </summary>
+        /// <param name="scream"></param>
         internal Scream(ScreamBackend.DB.Tables.Scream scream)
         {
             Model = scream;
             Cache_Key = CACHE_KEY_PREFIX + scream.Id;
         }
+        ///// <summary>
+        ///// instance from redis
+        ///// </summary>
+        ///// <param name="cacheKey"></param>
+        //internal Scream(string cacheKey, IDatabase redis)
+        //{
+        //    const string MODEL_KEY = "MODEL";
+        //    Cache_Key = cacheKey;
+            
+        //}
 
         /// <summary>
         /// valify screamid
@@ -30,6 +45,7 @@ namespace Screams
 
         /// <summary>
         /// parse scream database model to scream subject
+        /// will set cache
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -37,6 +53,7 @@ namespace Screams
         {
             if (model == null)
                 throw new NullReferenceException();
+
             return new Scream(model);
         }
     }

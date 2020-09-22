@@ -48,19 +48,22 @@ namespace Screams
             throw new Exception("发布失败");
         }
 
-        public async Task<ScreamResult> RemoveAsync(Scream scream)
+        public async Task<ScreamResult> RemoveAsync(int screamId)
         {
-            if (scream == null || scream.Model == null)
-                throw new NullReferenceException("scream can't be null");
+            if (!Scream.IsValidId(screamId))
+                throw new NullReferenceException("invalid scream Id");
 
-            var comments = await _db.Comments.AsNoTracking().Where(c => c.ScreamId == scream.Model.Id).ToListAsync();
+            var scream = await _db.Screams.AsNoTracking().Where(s => s.Id == screamId).SingleOrDefaultAsync();
+            var comments = await _db.Comments.AsNoTracking().Where(c => c.ScreamId == screamId).ToListAsync();
             _db.Comments.RemoveRange(comments);
-            _db.Screams.Remove(scream.Model);
+            if (scream == null)
+                throw new NullReferenceException("scream not exist");
+            _db.Screams.Remove(scream);
 
             int effects = await _db.SaveChangesAsync();
             if (effects == comments.Count + 1)
             {
-                await _redis.KeyDeleteAsync(scream.Cache_Key);
+                await _redis.KeyDeleteAsync(Scream.GetCacheKey(screamId));
                 return QuickResult.Successful();
             }
             return QuickResult.Unsuccessful("Delete scream fail");
@@ -121,7 +124,7 @@ namespace Screams
         /// </summary>
         /// <param name="screamId"></param>
         /// <returns></returns>
-        public async Task<Scream> GetScream(int screamId)
+        public async Task<Scream> GetScreamAsync(int screamId)
         {
             if (!Scream.IsValidId(screamId))
                 return null;
@@ -133,7 +136,9 @@ namespace Screams
             if (await _redis.KeyExistsAsync(currentKey))
             {
                 redisValue = await _redis.StringGetAsync(currentKey);
-                result = JsonConvert.DeserializeObject<Scream>(redisValue);
+                result = new Scream(
+                    JsonConvert.DeserializeObject<ScreamBackend.DB.Tables.Scream>(redisValue)
+                );
             }
             else
             {
@@ -141,7 +146,7 @@ namespace Screams
                 if (model == null)
                     return null;
                 result = Scream.Parse(model);
-                redisValue = JsonConvert.SerializeObject(result);
+                redisValue = JsonConvert.SerializeObject(result.Model);
                 await _redis.StringSetAsync(key: currentKey, redisValue);
             }
             await _redis.KeyExpireAsync(currentKey, TimeSpan.FromHours(1));
