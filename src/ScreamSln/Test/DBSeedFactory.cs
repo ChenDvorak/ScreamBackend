@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,19 +52,21 @@ namespace Test
                 Avatar = ""
             };
 
-            _db.Users.Add(FakerUser);
+            if (!_db.Users.Any())
+                _db.Users.Add(FakerUser);
+            if (!_db.Screams.Any())
+                _db.Screams.AddRange(ScreamModels);
 
-            _db.Screams.AddRange(ScreamModels);
-
-            int effects = _db.SaveChanges();
-            if (effects != (1 + ScreamModels.Count))
-                throw new Exception("Initializ user fail");
+            _db.SaveChanges();
         }
 
-        private List<ScreamBackend.DB.Tables.Scream> ScreamModels => new List<ScreamBackend.DB.Tables.Scream>
-        { 
+        /// <summary>
+        /// size 12
+        /// </summary>
+        protected List<ScreamBackend.DB.Tables.Scream> ScreamModels => new List<ScreamBackend.DB.Tables.Scream>
+        {
             new ScreamBackend.DB.Tables.Scream
-            { 
+            {
                 Author = FakerUser,
                 Content = "TEST: SCREAM ITEM_1"
             },

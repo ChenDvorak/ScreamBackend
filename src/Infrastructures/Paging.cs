@@ -42,6 +42,9 @@ namespace Infrastructures
         /// current size of data of page
         /// </summary>
         public int Size { get; set; }
+
+        [NonSerialized, Newtonsoft.Json.JsonIgnore]
+        public const int DEFAULT_SIZE = 20;
         /// <summary>
         /// total size of data
         /// </summary>

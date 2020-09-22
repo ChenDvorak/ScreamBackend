@@ -10,7 +10,7 @@
 
         public static Screams Create(int index, int size = 20, int capacity = 0)
         {
-            return new Screams(index <= 0 ? 1 : index, size < 0 ? 0 : size, capacity);
+            return new Screams(index <= 0 ? 1 : index, size < 0 ? DEFAULT_SIZE : size, capacity);
         }
 
         /// <summary>

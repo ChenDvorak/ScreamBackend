@@ -19,7 +19,7 @@ namespace Test
         /// Test post scream shall be successful
         /// </summary>
         [Fact]
-        public async void Post_Scream_Return_Successful()
+        public async void PostScream_RightData_ReturnSuccessful()
         {
             //  arrange
             const string CONTENT = "TEST: NEW SCREAM CONTENT SUCCESSFUL";
@@ -47,7 +47,7 @@ namespace Test
         /// Test shall be unsuccessful if content empty
         /// </summary>
         [Fact]
-        public async void Post_Scream_Return_Unsuccessful_With_Content_Empty()
+        public async void PostScream_EmptyContentData_ReturnUnsuccessful()
         {
             //  arrange
             const int ERRORS_COUNT = 1;
@@ -76,7 +76,7 @@ namespace Test
         /// Test shall be unsuccessful if author empty
         /// </summary>
         [Fact]
-        public async void Post_Scream_Return_Unsuccessful_With_Author_Empty()
+        public async void PostScream_EmptyAuthorData_ReturnUnsuccessful()
         {
             //  arrange
             const int ERRORS_COUNT = 1;
@@ -105,7 +105,7 @@ namespace Test
         /// Test shall be unsuccessful if author not exist
         /// </summary>
         [Fact]
-        public async void Post_Scream_Return_Unsuccessful_With_Author_Not_Exist()
+        public async void PostScream_NotExistAuthor_ReturnUnsuccessful()
         {
             //  arrange
             const int ERRORS_COUNT = 1;

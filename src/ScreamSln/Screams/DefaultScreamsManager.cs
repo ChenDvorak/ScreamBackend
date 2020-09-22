@@ -76,7 +76,10 @@ namespace Screams
         {
             var screamsPaging = Screams.Create(index, size);
 
-            screamsPaging.List = await _db.Screams.FromSqlRaw(BuildSQL())
+            screamsPaging.List = await _db.Screams
+#if RELEASE
+                                           .FromSqlRaw(BuildSQL())
+#endif
                                            .AsNoTracking()
                                            .OrderByDescending(scream => scream.CreateDate)
                                            .Where(s => !s.Hidden)
@@ -126,7 +129,7 @@ namespace Screams
             string redisValue;
             string currentKey = Scream.GetCacheKey(screamId);
             Scream result = null;
-            
+
             if (await _redis.KeyExistsAsync(currentKey))
             {
                 redisValue = await _redis.StringGetAsync(currentKey);
