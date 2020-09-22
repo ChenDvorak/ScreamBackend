@@ -35,16 +35,28 @@ namespace Screams
             Model = scream;
             Cache_Key = CACHE_KEY_PREFIX + scream.Id;
         }
-        ///// <summary>
-        ///// instance from redis
-        ///// </summary>
-        ///// <param name="cacheKey"></param>
-        //internal Scream(string cacheKey, IDatabase redis)
-        //{
-        //    const string MODEL_KEY = "MODEL";
-        //    Cache_Key = cacheKey;
-            
-        //}
+
+        /// <summary>
+        /// Scream full content
+        /// </summary>
+        public string FullContent
+        {
+            get
+            {
+                if (Model == null)
+                    throw new NullReferenceException("scream can't null");
+                return Model.Content;
+            }
+        }
+
+        /// <summary>
+        /// post comment
+        /// </summary>
+        /// <param name="content">comment content</param>
+        public async void PostComment(string content)
+        {
+
+        }
 
         /// <summary>
         /// valify screamid
