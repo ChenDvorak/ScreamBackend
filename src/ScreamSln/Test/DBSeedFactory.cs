@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,23 +25,21 @@ namespace Test
         /// Redis
         /// </summary>
         protected readonly StackExchange.Redis.ConnectionMultiplexer redisConn;
-
         public DBSeedFactory()
         {
             redisConn = StackExchange.Redis.ConnectionMultiplexer.Connect("localhost");
+            _db = new ScreamBackend.DB.ScreamDB(
+                new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
+                    .UseInMemoryDatabase("scream").Options
+            );
             SeedInit();
         }
         /// <summary>
         /// Initial InMemory database
         /// There will create a faker user in database
         /// </summary>
-        private void SeedInit()
+        protected void SeedInit()
         {
-            _db = new ScreamBackend.DB.ScreamDB(
-                new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
-                    .UseInMemoryDatabase("scream").Options
-            );
-
             FakerUser = new ScreamBackend.DB.Tables.User
             {
                 UserName = "Dvorak",
@@ -55,22 +54,20 @@ namespace Test
             if (!_db.Users.Any())
                 _db.Users.Add(FakerUser);
             if (!_db.Screams.Any())
-                _db.Screams.AddRange(ScreamModels);
+                _db.Screams.AddRange(FakerScreamModels);
 
             _db.SaveChanges();
-            foreach (var item in _db.ChangeTracker.Entries())
+            foreach (var item in FakerScreamModels)
             {
-                if (item == null)
-                    continue;
-                item.State = EntityState.Detached;
+                _db.Entry(item).State = EntityState.Detached;
             }
-            
+            FakerUser = _db.Users.AsNoTracking().First();
         }
 
         /// <summary>
         /// size 12
         /// </summary>
-        protected List<ScreamBackend.DB.Tables.Scream> ScreamModels => new List<ScreamBackend.DB.Tables.Scream>
+        protected List<ScreamBackend.DB.Tables.Scream> FakerScreamModels => new List<ScreamBackend.DB.Tables.Scream>
         {
             new ScreamBackend.DB.Tables.Scream
             {

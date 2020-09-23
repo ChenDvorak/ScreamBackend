@@ -33,7 +33,7 @@ namespace Test
             //  assert
             Assert.Equal(screams.Index, INDEX);
             Assert.Equal(screams.Size, SIZE);
-            Assert.Equal(screams.TotalSize, ScreamModels.Count);
+            Assert.Equal(screams.TotalSize, FakerScreamModels.Count);
             Assert.Equal(screams.TotalPage, TOTAL_PAGE);
             Assert.Equal(screams.List.Count, SIZE);
         }
@@ -61,7 +61,7 @@ namespace Test
             //  assert
             Assert.Equal(screams.Index, INDEX);
             Assert.Equal(screams.Size, SIZE);
-            Assert.Equal(screams.TotalSize, ScreamModels.Count);
+            Assert.Equal(screams.TotalSize, FakerScreamModels.Count);
             Assert.Equal(screams.TotalPage, TOTAL_PAGE);
             Assert.Equal(screams.List.Count, RETURN_SIZE);
         }
@@ -89,7 +89,7 @@ namespace Test
             //  assert
             Assert.Equal(screams.Index, INDEX);
             Assert.Equal(screams.Size, SIZE);
-            Assert.Equal(screams.TotalSize, ScreamModels.Count);
+            Assert.Equal(screams.TotalSize, FakerScreamModels.Count);
             Assert.Equal(screams.TotalPage, TOTAL_PAGE);
             Assert.Equal(screams.List.Count, RETURN_SIZE);
         }

@@ -37,7 +37,7 @@ namespace Screams
 
             var newScream = new ScreamBackend.DB.Tables.Scream
             {
-                Author = model.Author,
+                AuthorId = model.Author.Id,
                 Content = model.Content,
                 CreateDate = DateTime.Now,
                 State = (int)Scream.Status.WaitAudit

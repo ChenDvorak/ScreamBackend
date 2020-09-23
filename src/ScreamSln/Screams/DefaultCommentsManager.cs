@@ -43,14 +43,15 @@ namespace Screams
             if (comment.Content.Length > COMMENT_MAX_LENGTH)
                 return QuickResult.Unsuccessful($"评论内容必须小于{COMMENT_MAX_LENGTH}个字");
 
-
-            _db.Comments.Add(new Comment
+            var newComment = new Comment
             {
                 ScreamId = comment.Scream.Model.Id,
                 Content = comment.Content,
-                Author = comment.Author,
+                AuthorId = comment.Author.Id,
                 State = (int)Scream.Status.WaitAudit
-            });
+            };
+
+            await _db.Comments.AddAsync(newComment);
 
             int effects = await _db.SaveChangesAsync();
             if (effects == 1)

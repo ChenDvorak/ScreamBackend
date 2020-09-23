@@ -13,8 +13,6 @@ namespace ScreamBackend.DB.Tables
         public int HiddenCount { get; set; } = 0;
         [Required]
         public bool Hidden { get; set; } = false;
-        [Required]
-        public int AuditorId { get; set; }
-        public User Auditor { get; set; }
+        public int? AuditorId { get; set; }
     }
 }
