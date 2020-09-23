@@ -34,5 +34,11 @@ namespace Screams
         /// <param name="screamtion"></param>
         /// <returns></returns>
         Task<ScreamResult> RemoveAsync(int screamId);
+        /// <summary>
+        /// Post comment
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        Task<ScreamResult> PostComment(Models.NewComment comment);
     }
 }

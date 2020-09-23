@@ -6,6 +6,7 @@ namespace ScreamBackend.DB.Tables
     {
         [Required]
         public int AuthorId { get; set; }
+        public User Author { get; set; }
         [Required]
         public string Content { get; set; }
         [Required]

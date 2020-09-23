@@ -17,5 +17,13 @@ namespace Screams
             [Required(ErrorMessage = "内容至少5个字"), MinLength(5)]
             public string Content { get; set; }
         }
+
+        public struct NewComment
+        {
+            public Scream Scream { get; set; }
+            public User Author { get; set; }
+            [Required(ErrorMessage = "内容至少5个字"), MinLength(5)]
+            public string Content { get; set; }
+        }
     }
 }

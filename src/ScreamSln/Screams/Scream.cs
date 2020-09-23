@@ -50,15 +50,6 @@ namespace Screams
         }
 
         /// <summary>
-        /// post comment
-        /// </summary>
-        /// <param name="content">comment content</param>
-        public async void PostComment(string content)
-        {
-
-        }
-
-        /// <summary>
         /// valify screamid
         /// </summary>
         /// <param name="screamId"></param>
