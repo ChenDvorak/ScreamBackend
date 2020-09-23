@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Infrastructures;
+using Screams;
 
 namespace ScreamBackend
 {
@@ -57,7 +58,7 @@ namespace ScreamBackend
             //  Redis Database
             services.RedisInit(Configuration.GetConnectionString("redis"));
 
-            services.AddScoped<Screams.IScreamsManager, Screams.DefaultScreamsManager>();
+            services.UseScreamManager();
 
             services.AddControllers();
         }
