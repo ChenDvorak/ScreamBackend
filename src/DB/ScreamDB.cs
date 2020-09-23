@@ -26,6 +26,12 @@ namespace ScreamBackend.DB
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Scream>()
+                .HasIndex(s => s.CreateDate);
+
+            builder.Entity<Comment>()
+                .HasIndex(c => c.ScreamId);
         }
     }
 }

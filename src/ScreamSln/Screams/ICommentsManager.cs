@@ -12,6 +12,6 @@ namespace Screams
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        Task<ScreamResult> PostComment(Models.NewComment comment);
+        Task<ScreamResult> PostCommentAsync(Models.NewComment comment);
     }
 }

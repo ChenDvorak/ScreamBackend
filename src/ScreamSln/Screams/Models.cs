@@ -22,7 +22,9 @@ namespace Screams
         {
             public Scream Scream { get; set; }
             public User Author { get; set; }
-            [Required(ErrorMessage = "内容至少5个字"), MinLength(5)]
+            [Required]
+            [MinLength(DefaultCommentsManager.COMMENT_MIN_LENGTH)]
+            [MaxLength(DefaultCommentsManager.COMMENT_MAX_LENGTH)]
             public string Content { get; set; }
         }
     }
