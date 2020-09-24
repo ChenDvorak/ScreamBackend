@@ -1,7 +1,10 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Screams
 {
@@ -10,6 +13,12 @@ namespace Screams
     /// </summary>
     public class Scream
     {
+        /// <summary>
+        /// where it from
+        /// </summary>
+        private readonly AbstractScreamsManager _referenceScreams;
+        private readonly ScreamBackend.DB.ScreamDB _db;
+
         internal ScreamBackend.DB.Tables.Scream Model { get; }
 
         private const string CACHE_KEY_PREFIX = "d3338d92-18d3-4e87-87fd-fbe79e2a6daa";
@@ -30,10 +39,16 @@ namespace Screams
         /// instance from database model
         /// </summary>
         /// <param name="scream"></param>
-        internal Scream(ScreamBackend.DB.Tables.Scream scream)
+        public Scream(ScreamBackend.DB.Tables.Scream scream)
         {
             Model = scream;
             Cache_Key = CACHE_KEY_PREFIX + scream.Id;
+        }
+
+        internal Scream(ScreamBackend.DB.Tables.Scream scream, AbstractScreamsManager referenceScreams) : this(scream)
+        {
+            _referenceScreams = referenceScreams;
+            _db = referenceScreams.DB;
         }
 
         /// <summary>
@@ -59,17 +74,54 @@ namespace Screams
         internal static string GetCacheKey(int screamId) => CACHE_KEY_PREFIX + screamId;
 
         /// <summary>
-        /// parse scream database model to scream subject
-        /// will set cache
+        /// Post comment for scream
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="scream"></param>
+        /// <param name="comment"></param>
         /// <returns></returns>
-        internal static Scream Parse(ScreamBackend.DB.Tables.Scream model)
+        public async Task<ScreamResult> PostCommentAsync(Models.NewComment comment)
         {
-            if (model == null)
-                throw new NullReferenceException();
+            if (comment.Author == null)
+                throw new NullReferenceException("scream or model can't be null");
+            if (string.IsNullOrWhiteSpace(comment.Content))
+                return QuickResult.Unsuccessful("评论内容不能为空");
+            if (comment.Content.Length < AbstractCommentsManager.COMMENT_MIN_LENGTH)
+                return QuickResult.Unsuccessful($"评论内容必须大于{AbstractCommentsManager.COMMENT_MIN_LENGTH}个字");
+            if (comment.Content.Length > AbstractCommentsManager.COMMENT_MAX_LENGTH)
+                return QuickResult.Unsuccessful($"评论内容必须小于{AbstractCommentsManager.COMMENT_MAX_LENGTH}个字");
 
-            return new Scream(model);
+            var newComment = new ScreamBackend.DB.Tables.Comment
+            {
+                ScreamId = Model.Id,
+                Content = comment.Content,
+                AuthorId = comment.Author.Id,
+                State = (int)Status.WaitAudit
+            };
+
+            await _referenceScreams.DB.Comments.AddAsync(newComment);
+
+            int effects = await _db.SaveChangesAsync();
+            if (effects == 1)
+                return QuickResult.Successful();
+            throw new Exception("post comment fail");
         }
+
+        public async Task<ScreamResult> RemoveCommentAsync(int commentId)
+        {
+            if (!AbstractCommentsManager.IsValidCommentId(commentId))
+                throw new ArgumentOutOfRangeException("comment Id is not a valid integer");
+            var comment = await _db.Comments.AsNoTracking()
+                                            .Where(c => c.Id == commentId)
+                                            .SingleOrDefaultAsync();
+            if (comment == null)
+                return QuickResult.Unsuccessful("该评论不存在");
+
+            _db.Comments.Remove(comment);
+            int effected = await _db.SaveChangesAsync();
+            if (effected == 1)
+                return QuickResult.Successful();
+            throw new Exception($"remove comment fail: Id: {commentId}");
+        }
+
     }
 }

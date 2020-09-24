@@ -21,7 +21,7 @@ namespace Screams
         /// </summary>
         /// <param name="paging"></param>
         /// <returns></returns>
-        Task<Screams> GetScreamsAsync(int index, int size);
+        Task<ScreamPaging> GetScreamsAsync(int index, int size);
         /// <summary>
         /// post a new scream
         /// </summary>

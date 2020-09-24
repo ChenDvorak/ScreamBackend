@@ -1,62 +1,48 @@
-﻿using ScreamBackend.DB;
+﻿using Microsoft.EntityFrameworkCore;
+using ScreamBackend.DB;
 using ScreamBackend.DB.Tables;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Screams
 {
-    public class DefaultCommentsManager : ICommentsManager
+    public class DefaultCommentsManager : AbstractCommentsManager
     {
-        /// <summary>
-        /// 评论内容最大长度
-        /// </summary>
-        internal const int COMMENT_MAX_LENGTH = 200;
-        /// <summary>
-        /// 评论内容最小长度
-        /// </summary>
-        internal const int COMMENT_MIN_LENGTH = 4;
+        
+        public DefaultCommentsManager(ScreamDB db): base(db)
+        { }
 
-        private readonly ScreamDB _db;
-        public DefaultCommentsManager(ScreamDB db)
+        public override async Task<CommentPaging> GetCommentsAsync(Scream scream, int index, int size)
         {
-            _db = db;
-        }
+            if (scream == null || scream.Model == null)
+                throw new NullReferenceException("scream of model can't be null");
+            var paging = CommentPaging.Create(index, size);
 
-        /// <summary>
-        /// Post comment for scream
-        /// </summary>
-        /// <param name="scream"></param>
-        /// <param name="comment"></param>
-        /// <returns></returns>
-        public async Task<ScreamResult> PostCommentAsync(Models.NewComment comment)
-        {
-            if (comment.Scream == null || comment.Scream.Model == null)
-                throw new NullReferenceException("scream or model can't be null");
-            if (comment.Author == null)
-                throw new NullReferenceException("scream or model can't be null");
-            if (string.IsNullOrWhiteSpace(comment.Content))
-                return QuickResult.Unsuccessful("评论内容不能为空");
-            if (comment.Content.Length < COMMENT_MIN_LENGTH)
-                return QuickResult.Unsuccessful($"评论内容必须大于{COMMENT_MIN_LENGTH}个字");
-            if (comment.Content.Length > COMMENT_MAX_LENGTH)
-                return QuickResult.Unsuccessful($"评论内容必须小于{COMMENT_MAX_LENGTH}个字");
+            Expression<Func<Comment, bool>> whereStatement =
+                comment => comment.ScreamId == scream.Model.Id && !comment.Hidden;
 
-            var newComment = new Comment
-            {
-                ScreamId = comment.Scream.Model.Id,
-                Content = comment.Content,
-                AuthorId = comment.Author.Id,
-                State = (int)Scream.Status.WaitAudit
-            };
-
-            await _db.Comments.AddAsync(newComment);
-
-            int effects = await _db.SaveChangesAsync();
-            if (effects == 1)
-                return QuickResult.Successful();
-            throw new Exception("post comment fail");
-        }
+            paging.List = await _db.Comments.AsNoTracking()
+                                            .OrderByDescending(c => c.CreateDate)
+                                            .Where(whereStatement)
+                                            .Skip(paging.Skip)
+                                            .Take(paging.Size)
+                                            .Include(c => c.Author)
+                                            .Select(c => new CommentPaging.Comment
+                                            {
+                                                Id = c.Id,
+                                                AuthorId = c.AuthorId,
+                                                Author = c.Author.UserName,
+                                                Content = c.Content,
+                                                HiddenCount = c.HiddenCount,
+                                                DateTime = c.CreateDate.ToShortDateString()
+                                            })
+                                            .ToListAsync();
+            paging.TotalSize = await _db.Comments.CountAsync(whereStatement);
+            return paging;
+        }   
     }
 }

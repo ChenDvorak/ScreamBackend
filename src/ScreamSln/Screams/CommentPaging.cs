@@ -3,26 +3,25 @@
     /// <summary>
     /// this is a  paging of scream
     /// </summary>
-    public class ScreamPaging: Infrastructures.Paging<ScreamPaging.SingleItem>
+    public class CommentPaging : Infrastructures.Paging<CommentPaging.Comment>
     {
-        private ScreamPaging(int index, int size, int capacity = 0) : base(index, size, capacity)
+        private CommentPaging(int index, int size, int capacity = 0) : base(index, size, capacity)
         { }
 
-        public static ScreamPaging Create(int index, int size = 20, int capacity = 0)
+        public static CommentPaging Create(int index, int size = 20, int capacity = 0)
         {
-            return new ScreamPaging(index <= 0 ? 1 : index, size < 0 ? DEFAULT_SIZE : size, capacity);
+            return new CommentPaging(index <= 0 ? 1 : index, size < 0 ? DEFAULT_SIZE : size, capacity);
         }
 
         /// <summary>
         /// item of scream paging list
         /// </summary>
-        public class SingleItem
+        public class Comment
         {
             public int Id { get; set; }
             public int AuthorId { get; set; }
             public string Author { get; set; }
             public string Content { get; set; }
-            public bool IsFullContent { get; set; }
             public int HiddenCount { get; set; }
             public string DateTime { get; set; }
         }

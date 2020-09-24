@@ -20,11 +20,10 @@ namespace Screams
 
         public struct NewComment
         {
-            public Scream Scream { get; set; }
             public User Author { get; set; }
             [Required]
-            [MinLength(DefaultCommentsManager.COMMENT_MIN_LENGTH)]
-            [MaxLength(DefaultCommentsManager.COMMENT_MAX_LENGTH)]
+            [MinLength(AbstractCommentsManager.COMMENT_MIN_LENGTH)]
+            [MaxLength(AbstractCommentsManager.COMMENT_MAX_LENGTH)]
             public string Content { get; set; }
         }
     }

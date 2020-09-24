@@ -24,7 +24,7 @@ namespace IntegrationTests
 
                 services.AddDbContext<ScreamBackend.DB.ScreamDB>(options =>
                 {
-                    options.UseSqlite("Filename:Scream");
+                    options.UseSqlite("Filename:memory:");
                 });
 
                 var sp = services.BuildServiceProvider();
@@ -42,7 +42,7 @@ namespace IntegrationTests
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    throw ex;
                 }
             });
         }

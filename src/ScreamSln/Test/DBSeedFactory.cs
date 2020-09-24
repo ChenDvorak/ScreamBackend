@@ -20,7 +20,7 @@ namespace Test
         /// <summary>
         /// InMemor Database
         /// </summary>
-        protected ScreamBackend.DB.ScreamDB _db => new ScreamBackend.DB.ScreamDB(contextOptions);
+        protected readonly ScreamBackend.DB.ScreamDB _db;
         /// <summary>
         /// The Faker User to test
         /// </summary>
@@ -29,7 +29,7 @@ namespace Test
         /// Redis
         /// </summary>
         protected readonly StackExchange.Redis.ConnectionMultiplexer redisConn;
-        private readonly DbContextOptions contextOptions = new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
+        protected readonly DbContextOptions contextOptions = new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
                     .UseSqlite(CreateInMemorDatabase())
                     .Options;
         public DBSeedFactory()
@@ -37,6 +37,7 @@ namespace Test
             redisConn = StackExchange.Redis.ConnectionMultiplexer.Connect("localhost");
             _connection = RelationalOptionsExtension.Extract(contextOptions).Connection;
             _connection.Open();
+            _db = new ScreamBackend.DB.ScreamDB(contextOptions);
             SeedInit();
         }
         private static DbConnection CreateInMemorDatabase()

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Screams
 {
     public interface ICommentsManager
     {
         /// <summary>
-        /// Post comment
+        /// Get comments with paging of scream
         /// </summary>
-        /// <param name="comment"></param>
-        /// <returns></returns>
-        Task<ScreamResult> PostCommentAsync(Models.NewComment comment);
+        /// <param name="scream"></param>
+        /// <param name="index"></param>
+        /// <param name="size"></param>
+        Task<CommentPaging> GetCommentsAsync(Scream scream, int index, int size);
     }
 }
