@@ -9,6 +9,8 @@ namespace ScreamBackend.DB.Tables
         public User Author { get; set; }
         [Required]
         public string Content { get; set; } = "";
+        [Required, Range(0, int.MaxValue)]
+        public int ContentLength { get; set; } = 0;
         [Required]
         public int HiddenCount { get; set; } = 0;
         [Required]

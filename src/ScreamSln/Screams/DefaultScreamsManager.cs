@@ -14,6 +14,9 @@ namespace Screams
 {
     public class DefaultScreamsManager : IScreamsManager
     {
+        /// <summary>
+        /// The content will cut the longer which in list if content length longer than this value
+        /// </summary>
         private const int LIST_CONTENT_LIMIT_LENGTH = 50;
 
         private readonly ScreamDB _db;
@@ -39,6 +42,7 @@ namespace Screams
             {
                 AuthorId = model.Author.Id,
                 Content = model.Content,
+                ContentLength = model.Content.Length,
                 CreateDate = DateTime.Now,
                 State = (int)Scream.Status.WaitAudit
             };
@@ -81,9 +85,7 @@ namespace Screams
             var screamsPaging = Screams.Create(index, size);
 
             screamsPaging.List = await _db.Screams
-#if RELEASE
                                            .FromSqlRaw(BuildSQL())
-#endif
                                            .AsNoTracking()
                                            .OrderByDescending(scream => scream.CreateDate)
                                            .Where(s => !s.Hidden)
@@ -95,7 +97,10 @@ namespace Screams
                                                Id = s.Id,
                                                AuthorId = s.AuthorId,
                                                Author = s.Author.UserName,
-                                               Content = s.Content,
+                                               Content = s.ContentLength > LIST_CONTENT_LIMIT_LENGTH
+                                                        ? string.Concat(s.Content, "...")
+                                                        : s.Content,
+                                               IsFullContent = s.ContentLength <= LIST_CONTENT_LIMIT_LENGTH,
                                                DateTime = s.CreateDate.ToShortDateString()
                                            })
                                            .ToListAsync();
@@ -107,17 +112,21 @@ namespace Screams
         private string BuildSQL()
         {
             const string CONTENT = nameof(ScreamBackend.DB.Tables.Scream.Content);
+            //  IF(CHAR_LENGTH({CONTENT}) > {LIST_CONTENT_LIMIT_LENGTH}, concat(left({CONTENT}, {LIST_CONTENT_LIMIT_LENGTH}), '{LIST_CONTENT_LIMIT_LENGTH}'), {CONTENT}) as {CONTENT},
 
-            return $@"SELECT 
+            var sql = $@"SELECT 
                     {nameof(ScreamBackend.DB.Tables.Scream.Id)}, 
                     {nameof(ScreamBackend.DB.Tables.Scream.AuthorId)}, 
-                    IF(CHAR_LENGTH({CONTENT}) > {LIST_CONTENT_LIMIT_LENGTH}, concat(left({CONTENT}, {LIST_CONTENT_LIMIT_LENGTH}), '{LIST_CONTENT_LIMIT_LENGTH}'), {CONTENT}) as {CONTENT},
+                    SUBSTR({CONTENT}, 1, {LIST_CONTENT_LIMIT_LENGTH})  as {CONTENT},
+                    {nameof(ScreamBackend.DB.Tables.Scream.ContentLength)},
                     {nameof(ScreamBackend.DB.Tables.Scream.HiddenCount)}, 
                     {nameof(ScreamBackend.DB.Tables.Scream.Hidden)}, 
                     {nameof(ScreamBackend.DB.Tables.Scream.AuditorId)}, 
+                    {nameof(ScreamBackend.DB.Tables.Scream.State)}, 
                     {nameof(ScreamBackend.DB.Tables.Scream.CreateDate)}
                     FROM 
                     {nameof(ScreamDB.Screams)}";
+            return sql;
         }
 
         /// <summary>

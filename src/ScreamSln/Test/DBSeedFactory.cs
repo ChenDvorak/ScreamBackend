@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Test
 {
@@ -12,11 +15,12 @@ namespace Test
     /// </summary>
     public abstract class DBSeedFactory : IDisposable
     {
+        private DbConnection _connection;
         private bool disposedValue;
         /// <summary>
         /// InMemor Database
         /// </summary>
-        protected ScreamBackend.DB.ScreamDB _db;
+        protected ScreamBackend.DB.ScreamDB _db => new ScreamBackend.DB.ScreamDB(contextOptions);
         /// <summary>
         /// The Faker User to test
         /// </summary>
@@ -25,14 +29,21 @@ namespace Test
         /// Redis
         /// </summary>
         protected readonly StackExchange.Redis.ConnectionMultiplexer redisConn;
+        private readonly DbContextOptions contextOptions = new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
+                    .UseSqlite(CreateInMemorDatabase())
+                    .Options;
         public DBSeedFactory()
         {
             redisConn = StackExchange.Redis.ConnectionMultiplexer.Connect("localhost");
-            _db = new ScreamBackend.DB.ScreamDB(
-                new DbContextOptionsBuilder<ScreamBackend.DB.ScreamDB>()
-                    .UseInMemoryDatabase("scream").Options
-            );
+            _connection = RelationalOptionsExtension.Extract(contextOptions).Connection;
+            _connection.Open();
             SeedInit();
+        }
+        private static DbConnection CreateInMemorDatabase()
+        {
+            var connection = new SqliteConnection("Filename=:memory:");
+            connection.Open();
+            return connection;
         }
         /// <summary>
         /// Initial InMemory database
@@ -40,6 +51,10 @@ namespace Test
         /// </summary>
         protected void SeedInit()
         {
+            using var context = new ScreamBackend.DB.ScreamDB(contextOptions);
+
+            context.Database.EnsureCreated();
+
             FakerUser = new ScreamBackend.DB.Tables.User
             {
                 UserName = "Dvorak",
@@ -51,17 +66,12 @@ namespace Test
                 Avatar = ""
             };
 
-            if (!_db.Users.Any())
-                _db.Users.Add(FakerUser);
-            if (!_db.Screams.Any())
-                _db.Screams.AddRange(FakerScreamModels);
+            if (!context.Users.Any())
+                context.Users.Add(FakerUser);
+            if (!context.Screams.Any())
+                context.Screams.AddRange(FakerScreamModels);
 
-            _db.SaveChanges();
-            foreach (var item in FakerScreamModels)
-            {
-                _db.Entry(item).State = EntityState.Detached;
-            }
-            FakerUser = _db.Users.AsNoTracking().First();
+            int _ = context.SaveChanges();
         }
 
         /// <summary>
@@ -72,62 +82,74 @@ namespace Test
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_1"
+                Content = "TEST: SCREAM ITEM_1",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_2"
+                Content = "TEST: SCREAM ITEM_2",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_3"
+                Content = "TEST: SCREAM ITEM_3",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_4"
+                Content = "TEST: SCREAM ITEM_4",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_5"
+                Content = "TEST: SCREAM ITEM_5",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_6"
+                Content = "TEST: SCREAM ITEM_6",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_7"
+                Content = "TEST: SCREAM ITEM_7",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_8"
+                Content = "TEST: SCREAM ITEM_8",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_9"
+                Content = "TEST: SCREAM ITEM_9",
+                ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_10"
+                Content = "TEST: SCREAM ITEM_10",
+                ContentLength = 11
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_11"
+                Content = "TEST: SCREAM ITEM_11",
+                ContentLength = 11,
             },
             new ScreamBackend.DB.Tables.Scream
             {
                 Author = FakerUser,
-                Content = "TEST: SCREAM ITEM_12"
+                Content = "TEST: SCREAM ITEM_12",
+                ContentLength = 11
             },
         };
 
@@ -139,11 +161,7 @@ namespace Test
                 {
                     // TODO: 释放托管状态(托管对象)
                 }
-                if (_db != null)
-                {
-                    _db.Dispose();
-                    _db = null;
-                }
+                _connection.Dispose();
                 // TODO: 释放未托管的资源(未托管的对象)并替代终结器
                 // TODO: 将大型字段设置为 null
                 disposedValue = true;

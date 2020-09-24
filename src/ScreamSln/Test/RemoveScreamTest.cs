@@ -9,10 +9,10 @@ namespace Test
     {
 
         [Theory]
-        [InlineData(12)]
-        [InlineData(11)]
-        [InlineData(10)]
-        [InlineData(9)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
         public async void Remove_ReturnSuccessful(int screamId)
         {
             //  arrange
