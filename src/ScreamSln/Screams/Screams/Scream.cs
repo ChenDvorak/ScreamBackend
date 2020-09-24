@@ -71,33 +71,29 @@ namespace Screams.Screams
         /// Passed a scream
         /// </summary>
         /// <returns></returns>
-        public async Task SetPass()
-        {
-            if ((Status)Model.State == Status.Passed)
-                return;
+        public Task SetPass() => SetState(Status.Passed);
 
-            Model.State = (int)Status.Passed;
-            _db.Screams.Update(Model);
-            int effects = await _db.SaveChangesAsync();
-            if (effects == 1)
-                return;
-            throw new Exception("scream set pass fail");
-        }
         /// <summary>
         /// recycle a scream
         /// </summary>
         /// <returns></returns>
-        public async Task SetRecycle()
-        {
-            if ((Status)Model.State == Status.Recycle)
-                return;
+        public Task SetRecycle() => SetState(Status.Recycle);
 
-            Model.State = (int)Status.Recycle;
-            _db.Screams.Update(Model);
+        /// <summary>
+        /// set scream to wait audit
+        /// </summary>
+        /// <returns></returns>
+        public Task WaitAudit() => SetState(Status.WaitAudit);
+
+        private async Task SetState(Status status)
+        {
+            if ((Status)Model.State == status)
+                return;
+            Model.State = (int)status;
             int effects = await _db.SaveChangesAsync();
             if (effects == 1)
                 return;
-            throw new Exception("scream set recycle fail");
+            throw new Exception("scream set status fail");
         }
 
         /// <summary>
