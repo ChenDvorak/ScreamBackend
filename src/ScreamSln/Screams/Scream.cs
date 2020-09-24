@@ -39,14 +39,10 @@ namespace Screams
         /// instance from database model
         /// </summary>
         /// <param name="scream"></param>
-        public Scream(ScreamBackend.DB.Tables.Scream scream)
+        internal Scream(ScreamBackend.DB.Tables.Scream scream, AbstractScreamsManager referenceScreams)
         {
             Model = scream;
             Cache_Key = CACHE_KEY_PREFIX + scream.Id;
-        }
-
-        internal Scream(ScreamBackend.DB.Tables.Scream scream, AbstractScreamsManager referenceScreams) : this(scream)
-        {
             _referenceScreams = referenceScreams;
             _db = referenceScreams.DB;
         }
@@ -95,7 +91,7 @@ namespace Screams
                 ScreamId = Model.Id,
                 Content = comment.Content,
                 AuthorId = comment.Author.Id,
-                State = (int)Status.WaitAudit
+                State = (int)Comment.Status.WaitAudit
             };
 
             await _referenceScreams.DB.Comments.AddAsync(newComment);
