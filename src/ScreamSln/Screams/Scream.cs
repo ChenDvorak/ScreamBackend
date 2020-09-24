@@ -70,6 +70,39 @@ namespace Screams
         internal static string GetCacheKey(int screamId) => CACHE_KEY_PREFIX + screamId;
 
         /// <summary>
+        /// Passed a scream
+        /// </summary>
+        /// <returns></returns>
+        public async Task SetPass()
+        {
+            if ((Status)Model.State == Status.Passed)
+                return;
+
+            Model.State = (int)Status.Passed;
+            _db.Screams.Update(Model);
+            int effects = await _db.SaveChangesAsync();
+            if (effects == 1)
+                return;
+            throw new Exception("scream set pass fail");
+        }
+        /// <summary>
+        /// recycle a scream
+        /// </summary>
+        /// <returns></returns>
+        public async Task SetRecycle()
+        {
+            if ((Status)Model.State == Status.Recycle)
+                return;
+
+            Model.State = (int)Status.Recycle;
+            _db.Screams.Update(Model);
+            int effects = await _db.SaveChangesAsync();
+            if (effects == 1)
+                return;
+            throw new Exception("scream set recycle fail");
+        }
+
+        /// <summary>
         /// Post comment for scream
         /// </summary>
         /// <param name="scream"></param>
