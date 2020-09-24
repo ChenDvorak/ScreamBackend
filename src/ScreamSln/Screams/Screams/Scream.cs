@@ -97,6 +97,20 @@ namespace Screams.Screams
         }
 
         /// <summary>
+        /// Increase hidden count
+        /// </summary>
+        /// <returns></returns>
+        public async Task IncreaseHidden()
+        {
+            Model.HiddenCount++;
+            _db.Screams.Update(Model);
+            int effects = await _db.SaveChangesAsync();
+            if (effects == 1)
+                return;
+            throw new Exception("update scream status fail");
+        }
+
+        /// <summary>
         /// Post comment for scream
         /// </summary>
         /// <param name="scream"></param>
