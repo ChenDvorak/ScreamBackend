@@ -22,7 +22,7 @@ namespace Screams
                 throw new NullReferenceException("scream of model can't be null");
             var paging = CommentPaging.Create(index, size);
 
-            Expression<Func<Comment, bool>> whereStatement =
+            Expression<Func<ScreamBackend.DB.Tables.Comment, bool>> whereStatement =
                 comment => comment.ScreamId == scream.Model.Id && !comment.Hidden;
 
             paging.List = await _db.Comments.AsNoTracking()
