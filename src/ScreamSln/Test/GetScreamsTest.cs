@@ -22,7 +22,7 @@ namespace Test
             const int SIZE = 10;
             const int TOTAL_PAGE = 2;
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager
             (
                 _db, redisConn
             );
@@ -50,7 +50,7 @@ namespace Test
             const int TOTAL_PAGE = 2;
             const int RETURN_SIZE = 2;
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager
             (
                 _db, redisConn
             );
@@ -78,7 +78,7 @@ namespace Test
             const int TOTAL_PAGE = 2;
             const int RETURN_SIZE = 0;
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager
             (
                 _db, redisConn
             );

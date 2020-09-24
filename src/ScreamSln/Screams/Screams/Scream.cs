@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Screams
+namespace Screams.Screams
 {
     /// <summary>
     /// the subject of scream
@@ -16,7 +16,6 @@ namespace Screams
         /// <summary>
         /// where it from
         /// </summary>
-        private readonly AbstractScreamsManager _referenceScreams;
         private readonly ScreamBackend.DB.ScreamDB _db;
 
         internal ScreamBackend.DB.Tables.Scream Model { get; }
@@ -43,7 +42,6 @@ namespace Screams
         {
             Model = scream;
             Cache_Key = CACHE_KEY_PREFIX + scream.Id;
-            _referenceScreams = referenceScreams;
             _db = referenceScreams.DB;
         }
 
@@ -114,20 +112,20 @@ namespace Screams
                 throw new NullReferenceException("scream or model can't be null");
             if (string.IsNullOrWhiteSpace(comment.Content))
                 return QuickResult.Unsuccessful("评论内容不能为空");
-            if (comment.Content.Length < AbstractCommentsManager.COMMENT_MIN_LENGTH)
-                return QuickResult.Unsuccessful($"评论内容必须大于{AbstractCommentsManager.COMMENT_MIN_LENGTH}个字");
-            if (comment.Content.Length > AbstractCommentsManager.COMMENT_MAX_LENGTH)
-                return QuickResult.Unsuccessful($"评论内容必须小于{AbstractCommentsManager.COMMENT_MAX_LENGTH}个字");
+            if (comment.Content.Length < Comments.AbstractCommentsManager.COMMENT_MIN_LENGTH)
+                return QuickResult.Unsuccessful($"评论内容必须大于{Comments.AbstractCommentsManager.COMMENT_MIN_LENGTH}个字");
+            if (comment.Content.Length > Comments.AbstractCommentsManager.COMMENT_MAX_LENGTH)
+                return QuickResult.Unsuccessful($"评论内容必须小于{Comments.AbstractCommentsManager.COMMENT_MAX_LENGTH}个字");
 
             var newComment = new ScreamBackend.DB.Tables.Comment
             {
                 ScreamId = Model.Id,
                 Content = comment.Content,
                 AuthorId = comment.Author.Id,
-                State = (int)Comment.Status.WaitAudit
+                State = (int)Comments.Comment.Status.WaitAudit
             };
 
-            await _referenceScreams.DB.Comments.AddAsync(newComment);
+            await _db.Comments.AddAsync(newComment);
 
             int effects = await _db.SaveChangesAsync();
             if (effects == 1)
@@ -137,7 +135,7 @@ namespace Screams
 
         public async Task<ScreamResult> RemoveCommentAsync(int commentId)
         {
-            if (!AbstractCommentsManager.IsValidCommentId(commentId))
+            if (!Comments.AbstractCommentsManager.IsValidCommentId(commentId))
                 throw new ArgumentOutOfRangeException("comment Id is not a valid integer");
             var comment = await _db.Comments.AsNoTracking()
                                             .Where(c => c.Id == commentId)

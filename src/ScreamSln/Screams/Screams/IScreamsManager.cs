@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Screams
+namespace Screams.Screams
 {
     /// <summary>
     /// interface of screams manager

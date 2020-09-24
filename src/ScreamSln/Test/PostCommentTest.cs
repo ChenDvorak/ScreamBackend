@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Xunit;
+using Screams.Comments;
 
 namespace Test
 {
@@ -18,7 +19,7 @@ namespace Test
         public async void PostComment_RightComment_ReturnSuccessful()
         {
             //  arrange
-            Screams.IScreamsManager mockScreamsManager = new Screams.DefaultScreamsManager(_db, redisConn);
+            Screams.Screams.IScreamsManager mockScreamsManager = new Screams.Screams.DefaultScreamsManager(_db, redisConn);
 
             var mockScream = await mockScreamsManager.GetScreamAsync(SCREAM_ID);
 
@@ -43,7 +44,7 @@ namespace Test
             const int ERROR_COUNT = 1;
             const string ERROR = "评论内容不能为空";
 
-            Screams.IScreamsManager mockScreamsManager = new Screams.DefaultScreamsManager(_db, redisConn);
+            Screams.Screams.IScreamsManager mockScreamsManager = new Screams.Screams.DefaultScreamsManager(_db, redisConn);
 
             var mockScream = await mockScreamsManager.GetScreamAsync(SCREAM_ID);
 
@@ -67,8 +68,8 @@ namespace Test
         {
             //  arrange
 
-            Screams.IScreamsManager mockScreamsManager = new Screams.DefaultScreamsManager(_db, redisConn);
-            Screams.ICommentsManager mockCommentsManager = new Screams.DefaultCommentsManager(_db);
+            Screams.Screams.IScreamsManager mockScreamsManager = new Screams.Screams.DefaultScreamsManager(_db, redisConn);
+            ICommentsManager mockCommentsManager = new DefaultCommentsManager(_db);
 
             var mockScream = await mockScreamsManager.GetScreamAsync(1);
 

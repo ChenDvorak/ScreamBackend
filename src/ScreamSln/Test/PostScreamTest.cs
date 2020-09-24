@@ -23,7 +23,7 @@ namespace Test
         {
             //  arrange
             const string CONTENT = "TEST: NEW SCREAM CONTENT SUCCESSFUL";
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager(
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager(
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             { 
@@ -53,7 +53,7 @@ namespace Test
             const int ERRORS_COUNT = 1;
             const string ERRORS_CONTENT = "内容不能为空";
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager(
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager(
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             {
@@ -82,7 +82,7 @@ namespace Test
             const int ERRORS_COUNT = 1;
             const string ERRORS_CONTENT = "作者不能为空";
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager(
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager(
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             {
@@ -116,7 +116,7 @@ namespace Test
                 Id = 0
             };
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager(
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager(
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             {

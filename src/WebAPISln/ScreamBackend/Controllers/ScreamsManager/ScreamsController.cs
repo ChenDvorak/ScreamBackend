@@ -14,10 +14,10 @@ namespace ScreamBackend.Controllers.ScreamsManager
     /// </summary>
     public class ScreamsController : ScreamAPIBase
     {
-        private readonly Screams.IScreamsManager _screamsManager;
+        private readonly Screams.Screams.IScreamsManager _screamsManager;
         private readonly UserManager<DB.Tables.User> _userManager;
         public ScreamsController(
-            Screams.IScreamsManager _screamsManager,
+            Screams.Screams.IScreamsManager _screamsManager,
             UserManager<DB.Tables.User> _userManager)
         {
             this._screamsManager = _screamsManager;

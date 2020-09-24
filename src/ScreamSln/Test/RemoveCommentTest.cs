@@ -26,9 +26,9 @@ namespace Test
         public async void RemoveComment_ExistCommentId_ReturnSuccessful(int commentId)
         {
             //  arrange
-            
-            IScreamsManager mockScreamsManager = new DefaultScreamsManager(_db, redisConn);
-            Scream mockScream = await mockScreamsManager.GetScreamAsync(SCREAM_ID);
+
+            Screams.Screams.IScreamsManager mockScreamsManager = new Screams.Screams.DefaultScreamsManager(_db, redisConn);
+            Screams.Screams.Scream mockScream = await mockScreamsManager.GetScreamAsync(SCREAM_ID);
 
             //  act
             var result = await mockScream.RemoveCommentAsync(commentId);
@@ -43,8 +43,8 @@ namespace Test
         public async void RemoveComment_InvalidCommentId_ThrowException(int commentId)
         {
             //  arrange
-            IScreamsManager mockScreamsManager = new DefaultScreamsManager(_db, redisConn);
-            Scream mockScream = await mockScreamsManager.GetScreamAsync(SCREAM_ID);
+            Screams.Screams.IScreamsManager mockScreamsManager = new Screams.Screams.DefaultScreamsManager(_db, redisConn);
+            Screams.Screams.Scream mockScream = await mockScreamsManager.GetScreamAsync(SCREAM_ID);
 
             //  act
             var thr = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(

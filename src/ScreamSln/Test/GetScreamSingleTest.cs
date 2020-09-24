@@ -14,7 +14,7 @@ namespace Test
             //  arrange
             const int EXIST_ID = 1;
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager
             (
                 _db, redisConn
             );
@@ -32,7 +32,7 @@ namespace Test
             //  arrange
             const int NOT_EXIST_ID = 10111;
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager
             (
                 _db, redisConn
             );
@@ -50,7 +50,7 @@ namespace Test
             //  arrange
             const int INVALID_ID = -1;
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager
             (
                 _db, redisConn
             );

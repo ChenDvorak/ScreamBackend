@@ -15,7 +15,7 @@ namespace Test
             //  arrange
             const string EXPECT_CONTENT = "TEST: SCREAM ITEM_5";
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager(_db, redisConn);
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager(_db, redisConn);
             var scream = await screamsManager.GetScreamAsync(SCREAM_ID);
 
             //  act

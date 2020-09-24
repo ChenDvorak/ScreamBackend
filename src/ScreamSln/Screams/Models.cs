@@ -22,8 +22,8 @@ namespace Screams
         {
             public User Author { get; set; }
             [Required]
-            [MinLength(AbstractCommentsManager.COMMENT_MIN_LENGTH)]
-            [MaxLength(AbstractCommentsManager.COMMENT_MAX_LENGTH)]
+            [MinLength(Comments.AbstractCommentsManager.COMMENT_MIN_LENGTH)]
+            [MaxLength(Comments.AbstractCommentsManager.COMMENT_MAX_LENGTH)]
             public string Content { get; set; }
         }
     }

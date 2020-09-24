@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Screams
+namespace Screams.Comments
 {
     public class Comment
     {
         /// <summary>
         /// where it from
         /// </summary>
-        private readonly AbstractCommentsManager _referenceManagers;
         private readonly ScreamBackend.DB.ScreamDB _db;
 
         internal ScreamBackend.DB.Tables.Comment Model { get; }

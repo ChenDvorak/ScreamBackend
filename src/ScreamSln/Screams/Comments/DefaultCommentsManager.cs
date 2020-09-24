@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Screams
+namespace Screams.Comments
 {
     public class DefaultCommentsManager : AbstractCommentsManager
     {
@@ -16,7 +16,7 @@ namespace Screams
         public DefaultCommentsManager(ScreamDB db): base(db)
         { }
 
-        public override async Task<CommentPaging> GetCommentsAsync(Scream scream, int index, int size)
+        public override async Task<CommentPaging> GetCommentsAsync(Screams.Scream scream, int index, int size)
         {
             if (scream == null || scream.Model == null)
                 throw new NullReferenceException("scream of model can't be null");

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Screams.Comments;
 
 namespace Screams
 {
@@ -9,7 +10,7 @@ namespace Screams
         /// </summary>
         public static void UseScreamManager(this IServiceCollection services)
         {
-            services.AddScoped<IScreamsManager, DefaultScreamsManager>();
+            services.AddScoped<Screams.IScreamsManager, Screams.DefaultScreamsManager>();
             services.AddScoped<ICommentsManager, DefaultCommentsManager>();
         }
     }

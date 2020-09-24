@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using Screams.Comments;
 
 namespace Test
 {
@@ -21,8 +22,8 @@ namespace Test
 
             CreateComments(SCREAM_ID);
 
-            Screams.ICommentsManager commentsManager = new Screams.DefaultCommentsManager(_db);
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager(_db, redisConn);
+            ICommentsManager commentsManager = new DefaultCommentsManager(_db);
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager(_db, redisConn);
             var scream = await screamsManager.GetScreamAsync(SCREAM_ID);
             //  act
             var paging = await commentsManager.GetCommentsAsync(scream, index, size);
@@ -38,10 +39,10 @@ namespace Test
         private void CreateComments(int screamId)
         {
             const int COUNT = 25;
-            List<Comment> fakeComments = new List<Comment>(COUNT);
+            List<ScreamBackend.DB.Tables.Comment> fakeComments = new List<ScreamBackend.DB.Tables.Comment>(COUNT);
             for (int i = 1; i <= COUNT; i++)
             {
-                fakeComments.Add(new Comment
+                fakeComments.Add(new ScreamBackend.DB.Tables.Comment
                 {
                     Content = "TEST: FAKER COMMENT " + i,
                     AuthorId = FakerUser.Id,

@@ -17,7 +17,7 @@ namespace Test
         {
             //  arrange
 
-            Screams.IScreamsManager screamsManager = new Screams.DefaultScreamsManager
+            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager
             (
                 _db, redisConn
             );

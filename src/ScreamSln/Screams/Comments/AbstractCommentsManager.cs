@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Screams
+namespace Screams.Comments
 {
     public abstract class AbstractCommentsManager : ICommentsManager
     {
@@ -22,7 +22,7 @@ namespace Screams
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
-        public abstract Task<CommentPaging> GetCommentsAsync(Scream scream, int index, int size);
+        public abstract Task<CommentPaging> GetCommentsAsync(Screams.Scream scream, int index, int size);
         /// <summary>
         /// Validate comment id
         /// </summary>

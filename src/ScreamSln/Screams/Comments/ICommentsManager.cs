@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Screams
+namespace Screams.Comments
 {
     public interface ICommentsManager
     {
@@ -10,6 +10,6 @@ namespace Screams
         /// <param name="scream"></param>
         /// <param name="index"></param>
         /// <param name="size"></param>
-        Task<CommentPaging> GetCommentsAsync(Scream scream, int index, int size);
+        Task<CommentPaging> GetCommentsAsync(Screams.Scream scream, int index, int size);
     }
 }

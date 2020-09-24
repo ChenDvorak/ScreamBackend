@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Screams
+namespace Screams.Screams
 {
     /// <summary>
     /// There is abstract class of scream
