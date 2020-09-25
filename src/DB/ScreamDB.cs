@@ -17,6 +17,8 @@ namespace ScreamBackend.DB
             //  optionsBuilder.UseMySql("server=localhost;Database=scream;User=root;Password=MrUNOwen");
         }
 
+        public DbSet<User> Users { get; set; }
+
         /// <summary>
         /// Screams table
         /// </summary>

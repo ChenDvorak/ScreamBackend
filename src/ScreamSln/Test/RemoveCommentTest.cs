@@ -35,7 +35,7 @@ namespace Test
             var result = await mockScream.RemoveCommentAsync(commentId);
 
             //  assert
-            Assert.True(result.Successed);
+            Assert.True(result.Succeeded);
         }
 
         [Theory]

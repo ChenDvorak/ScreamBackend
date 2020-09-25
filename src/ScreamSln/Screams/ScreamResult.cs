@@ -66,12 +66,12 @@ namespace Screams
     {
         internal ScreamResult(bool success)
         {
-            Successed = success;
+            Succeeded = success;
         }
         /// <summary>
         /// is this result successfull
         /// </summary>
-        public bool Successed { get; } = false;
+        public bool Succeeded { get; } = false;
         /// <summary>
         /// error informations if result unseccessful
         /// </summary>

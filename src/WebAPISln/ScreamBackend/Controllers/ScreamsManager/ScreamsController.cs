@@ -69,7 +69,7 @@ namespace ScreamBackend.Controllers.ScreamsManager
             model.Author = userModel;
 
             var result = await _screamsManager.PostScreamAsync(model);
-            if (result.Successed)
+            if (result.Succeeded)
                 return Created("", result.Data);
 
             ParseModelStateErrors(result.Errors);

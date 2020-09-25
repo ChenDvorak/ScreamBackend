@@ -26,7 +26,7 @@ namespace Test
             var result = await screamsManager.RemoveAsync(screamId);
 
             //  assert
-            Assert.True(result.Successed);
+            Assert.True(result.Succeeded);
         }
     }
 }

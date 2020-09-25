@@ -37,7 +37,7 @@ namespace Test
             var newScream = _db.Screams.AsNoTracking().SingleOrDefault(s => s.Id == id);
 
             //  assert
-            Assert.True(result.Successed);
+            Assert.True(result.Succeeded);
             Assert.True(id > 0);
             Assert.NotNull(newScream);
             Assert.Equal(newScream.Content, CONTENT);
@@ -65,7 +65,7 @@ namespace Test
             var result = await screamsManager.PostScreamAsync(fakerNewScream);
 
             //  assert
-            Assert.False(result.Successed);
+            Assert.False(result.Succeeded);
             Assert.Equal(result.Data, NOT_DATA);
             Assert.NotNull(result.Errors);
             Assert.Equal(result.Errors.Count, ERRORS_COUNT);
@@ -94,7 +94,7 @@ namespace Test
             var result = await screamsManager.PostScreamAsync(fakerNewScream);
 
             //  assert
-            Assert.False(result.Successed);
+            Assert.False(result.Succeeded);
             Assert.Equal(result.Data, NOT_DATA);
             Assert.NotNull(result.Errors);
             Assert.Equal(result.Errors.Count, ERRORS_COUNT);
@@ -128,7 +128,7 @@ namespace Test
             var result = await screamsManager.PostScreamAsync(fakerNewScream);
 
             //  assert
-            Assert.False(result.Successed);
+            Assert.False(result.Succeeded);
             Assert.Equal(result.Data, NOT_DATA);
             Assert.NotNull(result.Errors);
             Assert.Equal(result.Errors.Count, ERRORS_COUNT);

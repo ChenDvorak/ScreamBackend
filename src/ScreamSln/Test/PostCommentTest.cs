@@ -34,7 +34,7 @@ namespace Test
             var result = await mockScream.PostCommentAsync(fakerComment);
 
             //  assert
-            Assert.True(result.Successed);
+            Assert.True(result.Succeeded);
         }
 
 
@@ -59,7 +59,7 @@ namespace Test
             var result = await mockScream.PostCommentAsync(fakerComment);
 
             //  assert
-            Assert.False(result.Successed);
+            Assert.False(result.Succeeded);
             Assert.Equal(result.Errors.Count, ERROR_COUNT);
             Assert.Equal(result.Errors.First(), ERROR);
         }
