@@ -45,7 +45,7 @@ namespace Test
                 fakeComments.Add(new ScreamBackend.DB.Tables.Comment
                 {
                     Content = "TEST: FAKER COMMENT " + i,
-                    AuthorId = FakerUser.Id,
+                    AuthorId = FakeUser.Id,
                     ScreamId = screamId
                 });
             }

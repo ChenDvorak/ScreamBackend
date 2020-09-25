@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 using Screams.Comments;
+using System.Threading.Tasks;
 
 namespace Test
 {
@@ -25,7 +26,7 @@ namespace Test
 
             Screams.Models.NewComment fakerComment = new Screams.Models.NewComment
             { 
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: RIGTH COMMENT"
             };
 
@@ -50,7 +51,7 @@ namespace Test
 
             Screams.Models.NewComment fakerComment = new Screams.Models.NewComment
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = ""
             };
 
@@ -80,10 +81,10 @@ namespace Test
             };
 
             //  act
-            var t = await Assert.ThrowsAsync<NullReferenceException>(
-                        async () => await mockScream.PostCommentAsync(fakerComment));
+            Task actual() => mockScream.PostCommentAsync(fakerComment);
+
             //  assert
-            Assert.NotNull(t);
+            await Assert.ThrowsAsync<NullReferenceException>(actual);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Test
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             { 
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = CONTENT
             };
 
@@ -57,7 +57,7 @@ namespace Test
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = ""
             };
 

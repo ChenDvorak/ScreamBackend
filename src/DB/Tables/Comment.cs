@@ -16,5 +16,6 @@ namespace ScreamBackend.DB.Tables
         public bool Hidden { get; set; } = false;
         [Required]
         public int ScreamId { get; set; }
+        public Scream Scream { get; set; }
     }
 }

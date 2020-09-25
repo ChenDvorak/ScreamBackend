@@ -16,6 +16,22 @@ namespace Screams.Comments
         public DefaultCommentsManager(ScreamDB db): base(db)
         { }
 
+        /// <summary>
+        /// Return Comment or null if not exist
+        /// </summary>
+        /// <param name="commentId"></param>
+        /// <returns></returns>
+        public override async Task<Comment> GetCommentAsync(int commentId)
+        {
+            if (!IsValidCommentId(commentId))
+                throw new ArgumentOutOfRangeException("Invalid comment Id");
+            var comment = await _db.Comments.AsNoTracking().SingleOrDefaultAsync(c => c.Id == commentId);
+            if (comment == null)
+                return null;
+            var result = new Comment(comment, _db);
+            return result;
+        }
+
         public override async Task<CommentPaging> GetCommentsAsync(Screams.Scream scream, int index, int size)
         {
             if (scream == null || scream.Model == null)

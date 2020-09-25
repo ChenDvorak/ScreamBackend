@@ -29,6 +29,6 @@ namespace Screams.Comments
         /// <param name="commentId"></param>
         /// <returns></returns>
         public static bool IsValidCommentId(int commentId) => commentId > 0;
-
+        public abstract Task<Comment> GetCommentAsync(int commentId);
     }
 }

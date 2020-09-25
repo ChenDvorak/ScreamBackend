@@ -24,7 +24,7 @@ namespace Test
         /// <summary>
         /// The Faker User to test
         /// </summary>
-        protected ScreamBackend.DB.Tables.User FakerUser;
+        protected ScreamBackend.DB.Tables.User FakeUser;
         /// <summary>
         /// Redis
         /// </summary>
@@ -56,7 +56,7 @@ namespace Test
 
             context.Database.EnsureCreated();
 
-            FakerUser = new ScreamBackend.DB.Tables.User
+            FakeUser = new ScreamBackend.DB.Tables.User
             {
                 UserName = "Dvorak",
                 NormalizedUserName = "DVORAK",
@@ -68,7 +68,7 @@ namespace Test
             };
 
             if (!context.Users.Any())
-                context.Users.Add(FakerUser);
+                context.Users.Add(FakeUser);
             if (!context.Screams.Any())
                 context.Screams.AddRange(FakerScreamModels);
 
@@ -82,73 +82,73 @@ namespace Test
         {
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_1",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_2",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_3",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_4",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_5",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_6",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_7",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_8",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_9",
                 ContentLength = 10
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_10",
                 ContentLength = 11
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_11",
                 ContentLength = 11,
             },
             new ScreamBackend.DB.Tables.Scream
             {
-                Author = FakerUser,
+                Author = FakeUser,
                 Content = "TEST: SCREAM ITEM_12",
                 ContentLength = 11
             },

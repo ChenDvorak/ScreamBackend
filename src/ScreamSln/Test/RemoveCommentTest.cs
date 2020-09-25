@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Test
@@ -11,7 +12,7 @@ namespace Test
         const int SCREAM_ID = 6;
 
 
-        public RemoveCommentTest(): base()
+        public RemoveCommentTest() : base()
         {
             CreateComments(SCREAM_ID);
         }
@@ -47,11 +48,10 @@ namespace Test
             Screams.Screams.Scream mockScream = await mockScreamsManager.GetScreamAsync(SCREAM_ID);
 
             //  act
-            var thr = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
-                    async () => await mockScream.RemoveCommentAsync(commentId));
+            Task actual() => mockScream.RemoveCommentAsync(commentId);
 
             //  assert
-            Assert.NotNull(thr);
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(actual);
         }
 
         private void CreateComments(int screamId)
@@ -63,7 +63,7 @@ namespace Test
                 fakeComments.Add(new ScreamBackend.DB.Tables.Comment
                 {
                     Content = "TEST: FAKER COMMENT " + i,
-                    AuthorId = FakerUser.Id,
+                    AuthorId = FakeUser.Id,
                     ScreamId = screamId
                 });
             }

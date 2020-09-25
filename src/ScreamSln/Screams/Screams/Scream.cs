@@ -59,6 +59,11 @@ namespace Screams.Screams
         }
 
         /// <summary>
+        /// Current scream state
+        /// </summary>
+        public Status State => (Status)Model.State;
+
+        /// <summary>
         /// valify screamid
         /// </summary>
         /// <param name="screamId"></param>
@@ -83,7 +88,7 @@ namespace Screams.Screams
         /// set scream to wait audit
         /// </summary>
         /// <returns></returns>
-        public Task WaitAudit() => SetState(Status.WaitAudit);
+        public Task SetWaitAudit() => SetState(Status.WaitAudit);
 
         private async Task SetState(Status status)
         {
@@ -99,15 +104,15 @@ namespace Screams.Screams
         /// <summary>
         /// Increase hidden count
         /// </summary>
-        /// <returns></returns>
-        public async Task IncreaseHidden()
+        /// <returns>increased hidden count</returns>
+        public async Task<int> IncreaseHidden()
         {
             Model.HiddenCount++;
             _db.Screams.Update(Model);
             int effects = await _db.SaveChangesAsync();
             if (effects == 1)
-                return;
-            throw new Exception("update scream status fail");
+                return Model.HiddenCount;
+            throw new Exception("Increase scream hidden count fail");
         }
 
         /// <summary>
