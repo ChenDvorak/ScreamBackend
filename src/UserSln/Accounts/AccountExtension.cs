@@ -9,7 +9,7 @@ namespace Accounts
     {
         public static void UseAccount(this IServiceCollection services)
         {
-            services.AddScoped(typeof(UserManager));
+            services.AddScoped<IAccountManager, UserManager>();
         }
     }
 }

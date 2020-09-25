@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Accounts
 {
-    public class UserManager
+    public class UserManager : IAccountManager
     {
         private readonly ScreamDB _db;
         private readonly IDatabase _redis;
