@@ -5,7 +5,7 @@ using ScreamBackend.DB.Tables;
 
 namespace ScreamBackend.DB
 {
-    public class ScreamDB : IdentityDbContext<Tables.User, IdentityRole<int>, int>
+    public class ScreamDB : DbContext
     {
         public ScreamDB(DbContextOptions options) : base(options)
         {

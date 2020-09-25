@@ -8,7 +8,7 @@ using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IntegrationTests
+namespace IntegrationTests.ControllersTest
 {
     public class AccountsTests: IClassFixture<CustomWebApplicationFactory<ScreamBackend.Startup>>
     {

@@ -28,4 +28,8 @@
     <ProjectReference Include="..\ScreamBackend\ScreamBackend.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MiddlewaresTest\" />
+  </ItemGroup>
+
 </Project>
