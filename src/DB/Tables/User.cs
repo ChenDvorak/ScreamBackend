@@ -5,9 +5,9 @@ namespace ScreamBackend.DB.Tables
     public class User: EntityBase
     {
         [Required, StringLength(32)]
-        public string UserName { get; set; }
+        public string Username { get; set; }
         [Required, StringLength(32)]
-        public string NormalizedUserName { get; set; }
+        public string NormalizedUsername { get; set; }
         [Required, StringLength(256)]
         public string Email { get; set; }
         [Required, StringLength(256)]

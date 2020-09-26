@@ -8,7 +8,7 @@ namespace Accounts
 {
     public interface IAccountManager
     {
-        public Task<AccountResult> RegisterAsync();
+        public Task<AccountResult> RegisterAsync(Models.RegisterInfo register);
 
         public Task<AccountResult> SignInAsync();
 

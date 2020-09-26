@@ -1,4 +1,5 @@
-﻿using ScreamBackend.DB;
+﻿using Microsoft.EntityFrameworkCore;
+using ScreamBackend.DB;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,18 @@ namespace Accounts
         /// Register a new user
         /// </summary>
         /// <returns></returns>
-        public Task<AccountResult> RegisterAsync()
+        public Task<AccountResult> RegisterAsync(Models.RegisterInfo register)
         {
+            
+
             throw new NotImplementedException();
+        }
+
+        private async Task<ScreamBackend.DB.Tables.User> GetUserFromEmailAsync(string email)
+        {
+            var model = await _db.Users.AsNoTracking()
+                .SingleOrDefaultAsync(u => u.NormalizedEmail == Formator.EmailNormaliz(email));
+            return model;
         }
 
         public Task<AccountResult> SignInAsync()

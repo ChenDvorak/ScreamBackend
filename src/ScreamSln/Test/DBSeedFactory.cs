@@ -58,8 +58,8 @@ namespace Test
 
             FakeUser = new ScreamBackend.DB.Tables.User
             {
-                UserName = "Dvorak",
-                NormalizedUserName = "DVORAK",
+                Username = "Dvorak",
+                NormalizedUsername = "DVORAK",
                 Email = "dvorak@outlook.com",
                 NormalizedEmail = "DVORAK@OUTLOOK.COM",
                 IsAdmin = false,

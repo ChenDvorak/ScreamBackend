@@ -94,7 +94,7 @@ namespace Screams.Screams
                                            {
                                                Id = s.Id,
                                                AuthorId = s.AuthorId,
-                                               Author = s.Author.UserName,
+                                               Author = s.Author.Username,
                                                Content = s.ContentLength > LIST_CONTENT_LIMIT_LENGTH
                                                         ? string.Concat(s.Content, "...")
                                                         : s.Content,

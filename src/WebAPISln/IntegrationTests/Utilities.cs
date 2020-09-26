@@ -46,8 +46,8 @@ namespace IntegrationTests
 
         private static ScreamBackend.DB.Tables.User FakeUser => new ScreamBackend.DB.Tables.User
         {
-            UserName = "Dvorak",
-            NormalizedUserName = "DVORAK",
+            Username = "Dvorak",
+            NormalizedUsername = "DVORAK",
             Email = "dvorak@outlook.com",
             NormalizedEmail = "DVORAK@OUTLOOK.COM",
             IsAdmin = false,
@@ -56,8 +56,8 @@ namespace IntegrationTests
         };
         private static ScreamBackend.DB.Tables.User FakeCommentAuthor => new ScreamBackend.DB.Tables.User
         {
-            UserName = "Comment Dvorak",
-            NormalizedUserName = "COMMENT DVORAK",
+            Username = "Comment Dvorak",
+            NormalizedUsername = "COMMENT DVORAK",
             Email = "Comment dvorak@outlook.com",
             NormalizedEmail = "COMMENTDVORAK@OUTLOOK.COM",
             IsAdmin = false,

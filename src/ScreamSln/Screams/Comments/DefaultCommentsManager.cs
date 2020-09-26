@@ -51,7 +51,7 @@ namespace Screams.Comments
                                             {
                                                 Id = c.Id,
                                                 AuthorId = c.AuthorId,
-                                                Author = c.Author.UserName,
+                                                Author = c.Author.Username,
                                                 Content = c.Content,
                                                 HiddenCount = c.HiddenCount,
                                                 DateTime = c.CreateDate.ToShortDateString()
