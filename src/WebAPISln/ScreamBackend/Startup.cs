@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Infrastructures;
 using Screams;
 using Accounts;
+using ScreamBackend.ServitesExtension;
 
 namespace ScreamBackend
 {
@@ -35,6 +36,8 @@ namespace ScreamBackend
             {
                 options.UseMySql(Configuration.GetConnectionString("Scream-MySQL"));
             });
+
+            services.UseJWT(AccountAuthorization.TokenValidationParameters);
 
             //  Redis Database
             services.RedisInit(Configuration.GetConnectionString("redis"));

@@ -2,10 +2,8 @@
 using ScreamBackend.DB;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Accounts
@@ -34,7 +32,7 @@ namespace Accounts
                 return AccountResult.Unsuccessful("");
 
             user = new ScreamBackend.DB.Tables.User
-            { 
+            {
                 Email = register.Email,
                 NormalizedEmail = Formator.EmailNormaliz(register.Email),
                 Username = Formator.SplitUsernameFromEmail(register.Email),
@@ -82,5 +80,6 @@ namespace Accounts
                 .SingleOrDefaultAsync();
             return new User(user, _db);
         }
+
     }
 }
