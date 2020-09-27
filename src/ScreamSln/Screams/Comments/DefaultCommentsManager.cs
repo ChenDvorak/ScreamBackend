@@ -42,7 +42,7 @@ namespace Screams.Comments
                 comment => comment.ScreamId == scream.Model.Id && !comment.Hidden;
 
             paging.List = await _db.Comments.AsNoTracking()
-                                            .OrderByDescending(c => c.CreateDate)
+                                            .OrderByDescending(c => c.CreateDateTime)
                                             .Where(whereStatement)
                                             .Skip(paging.Skip)
                                             .Take(paging.Size)
@@ -54,7 +54,7 @@ namespace Screams.Comments
                                                 Author = c.Author.Username,
                                                 Content = c.Content,
                                                 HiddenCount = c.HiddenCount,
-                                                DateTime = c.CreateDate.ToShortDateString()
+                                                DateTime = c.CreateDateTime.ToShortDateString()
                                             })
                                             .ToListAsync();
             paging.TotalSize = await _db.Comments.CountAsync(whereStatement);

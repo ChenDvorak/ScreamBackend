@@ -30,7 +30,7 @@ namespace ScreamBackend.DB
             base.OnModelCreating(builder);
 
             builder.Entity<Scream>()
-                .HasIndex(s => s.CreateDate)
+                .HasIndex(s => s.CreateDateTime)
                 .IsUnique(false);
 
             builder.Entity<Comment>()

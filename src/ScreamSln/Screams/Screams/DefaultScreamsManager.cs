@@ -41,7 +41,7 @@ namespace Screams.Screams
                 AuthorId = model.Author.Id,
                 Content = model.Content,
                 ContentLength = model.Content.Length,
-                CreateDate = DateTime.Now,
+                CreateDateTime = DateTime.Now,
                 State = (int)Scream.Status.WaitAudit
             };
             await DB.Screams.AddAsync(newScream);
@@ -85,7 +85,7 @@ namespace Screams.Screams
             screamsPaging.List = await DB.Screams
                                            .FromSqlRaw(BuildSQL())
                                            .AsNoTracking()
-                                           .OrderByDescending(scream => scream.CreateDate)
+                                           .OrderByDescending(scream => scream.CreateDateTime)
                                            .Where(s => !s.Hidden)
                                            .Skip(screamsPaging.Skip)
                                            .Take(screamsPaging.Size)
@@ -100,7 +100,7 @@ namespace Screams.Screams
                                                         : s.Content,
                                                IsFullContent = s.ContentLength <= LIST_CONTENT_LIMIT_LENGTH,
                                                HiddenCount = s.HiddenCount,
-                                               DateTime = s.CreateDate.ToShortDateString()
+                                               DateTime = s.CreateDateTime.ToShortDateString()
                                            })
                                            .ToListAsync();
             screamsPaging.TotalSize = await DB.Screams.CountAsync(s => !s.Hidden);
@@ -122,7 +122,7 @@ namespace Screams.Screams
                     {nameof(ScreamBackend.DB.Tables.Scream.Hidden)}, 
                     {nameof(ScreamBackend.DB.Tables.Scream.AuditorId)}, 
                     {nameof(ScreamBackend.DB.Tables.Scream.State)}, 
-                    {nameof(ScreamBackend.DB.Tables.Scream.CreateDate)}
+                    {nameof(ScreamBackend.DB.Tables.Scream.CreateDateTime)}
                     FROM 
                     {nameof(ScreamDB.Screams)}";
             return sql;

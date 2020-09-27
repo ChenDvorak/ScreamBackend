@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Accounts
 {
-    public class UserManager : IAccountManager
+    public class UserManager : IAccountManager<UserManager>
     {
         private readonly ScreamDB _db;
         private readonly IDatabase _redis;
@@ -64,8 +64,20 @@ namespace Accounts
             return user.SignOutAsync();
         }
 
-        public Task<User> GetUserAsync(ClaimsPrincipal principal)
+        public async Task<User> GetUserAsync(ClaimsPrincipal principal)
         {
+            var claim = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+            if (claim == null || !int.TryParse(claim.Value, out int userId))
+                return null;
+
+            string key = User.GetCacheKey(userId);
+
+            ScreamBackend.DB.Tables.User model = new ScreamBackend.DB.Tables.User();
+
+            if (!int.TryParse(await _redis.HashGetAsync(key, nameof(ScreamBackend.DB.Tables.User.Id)), out userId))
+                model.Id = userId;
+
+#warning THIS
             throw new NotImplementedException();
         }
 

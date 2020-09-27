@@ -12,6 +12,6 @@ namespace ScreamBackend.DB
         public int Id { get; set; }
         [Required]
         public int State { get; set; } = 0;
-        public DateTime CreateDate { get; set; } = DateTime.Now;
+        public DateTime CreateDateTime { get; set; } = DateTime.Now;
     }
 }

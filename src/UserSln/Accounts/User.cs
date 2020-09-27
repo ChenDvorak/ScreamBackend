@@ -20,6 +20,8 @@ namespace Accounts
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
+        internal static string GetCacheKey(int userId) => "USER_" + userId;
+
         public async Task<bool> IsPasswordMatchAsync(Models.SignInInfo model)
         {
             return await _db.Users.AsNoTracking()
@@ -33,9 +35,7 @@ namespace Accounts
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.PrimarySid, model.Id.ToString()),
-                new Claim(ClaimTypes.Name, model.NormalizedUsername),
-                new Claim(ClaimTypes.Email, model.NormalizedEmail)
+                new Claim(ClaimTypes.PrimarySid, model.Id.ToString())
             };
             return claims;
         }

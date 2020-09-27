@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Accounts
 {
@@ -9,7 +6,7 @@ namespace Accounts
     {
         public static void UseAccount(this IServiceCollection services)
         {
-            services.AddScoped<IAccountManager, UserManager>();
+            services.AddScoped<IAccountManager<UserManager>, UserManager>();
         }
     }
 }
