@@ -16,5 +16,11 @@ namespace Accounts
             [Required]
             public string ConfirmPassword { get; set; }
         }
+
+        public class SignInInfo
+        {
+            public string Account { get; set; }
+            public string Password { get; set; }
+        }
     }
 }

@@ -3,6 +3,7 @@ using ScreamBackend.DB;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,29 @@ namespace Accounts
         /// Register a new user
         /// </summary>
         /// <returns></returns>
-        public Task<AccountResult> RegisterAsync(Models.RegisterInfo register)
+        public async Task<AccountResult> RegisterAsync(Models.RegisterInfo register)
         {
-            
+            if (register.Password != register.ConfirmPassword)
+                return AccountResult.Unsuccessful("两次密码不一致");
 
-            throw new NotImplementedException();
+            var user = await GetUserFromEmailAsync(register.Email);
+            if (user != null)
+                return AccountResult.Unsuccessful("");
+
+            user = new ScreamBackend.DB.Tables.User
+            { 
+                Email = register.Email,
+                NormalizedEmail = Formator.EmailNormaliz(register.Email),
+                Username = Formator.SplitUsernameFromEmail(register.Email),
+                PasswordHash = register.Password
+            };
+            user.NormalizedUsername = Formator.UsernameNormaliz(user.Username);
+
+            _db.Users.Add(user);
+            int effects = await _db.SaveChangesAsync();
+            if (effects == 1)
+                return AccountResult.Successful;
+            throw new Exception("Register fail");
         }
 
         private async Task<ScreamBackend.DB.Tables.User> GetUserFromEmailAsync(string email)
@@ -37,19 +56,31 @@ namespace Accounts
             return model;
         }
 
-        public Task<AccountResult> SignInAsync()
+        public Task<AccountResult> AdminSignInAsync(Models.SignInInfo model)
         {
             throw new NotImplementedException();
         }
 
-        public Task SignOutAsync()
+        public Task SignOutAsync(User user)
         {
-            throw new NotImplementedException();
+            return user.SignOutAsync();
         }
 
         public Task<User> GetUserAsync(ClaimsPrincipal principal)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<User> GetUserAsync(string account)
+        {
+            if (string.IsNullOrWhiteSpace(account))
+                return null;
+
+            var user = await _db.Users.AsNoTracking()
+                .Where(u => u.Username.Equals(account, StringComparison.OrdinalIgnoreCase)
+                        || u.Email.Equals(account, StringComparison.OrdinalIgnoreCase))
+                .SingleOrDefaultAsync();
+            return new User(user, _db);
         }
     }
 }

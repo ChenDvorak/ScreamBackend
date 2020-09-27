@@ -15,5 +15,18 @@ namespace Accounts
         {
             return email.ToUpper();
         }
+
+        internal static string UsernameNormaliz(string username)
+        {
+            return username.ToUpper();
+        }
+
+        internal static string SplitUsernameFromEmail(string email)
+        {
+            var chars = email.Split('@');
+            if (chars.Length < 2)
+                throw new FormatException("Wrong email format");
+            return chars[0];
+        }
     }
 }

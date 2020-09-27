@@ -16,12 +16,19 @@ namespace Accounts
         {
             Succeeded = true
         };
-        public static AccountResult Unsuccessful => new AccountResult
+
+        public static AccountResult Unsuccessful(params string[] errors)
         {
-            Succeeded = false
-        };
+            return new AccountResult
+            {
+                Succeeded = false,
+                Errors = errors
+            };
+        }
+
         public bool Succeeded { get; protected set; }
- 
+
+        public ICollection<string> Errors { get; set; }
     }
 
     public class AccountResult<T> : AccountResult
@@ -36,17 +43,18 @@ namespace Accounts
             return result;
         }
 
-        public static new AccountResult Unsuccessful(T data)
+        public static AccountResult Unsuccessful(T data, params string[] errors)
         {
-            var baseResult = AccountResult.Unsuccessful;
-            return Parse(baseResult, data);
+            var baseResult = Unsuccessful(errors);
+            return Parse(baseResult, data, baseResult.Errors);
         }
-        private static AccountResult<T> Parse(AccountResult baseResult, T data)
+        private static AccountResult<T> Parse(AccountResult baseResult, T data, ICollection<string> errors)
         {
             var result = new AccountResult<T>
             {
                 Succeeded = baseResult.Succeeded,
-                Data = data
+                Data = data,
+                Errors = errors
             };
             result.Data = data;
             return result;
