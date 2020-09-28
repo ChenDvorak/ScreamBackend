@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using Accounts;
+using Microsoft.EntityFrameworkCore;
 
 namespace AccountsTest
 {
@@ -47,6 +48,28 @@ namespace AccountsTest
 
             //  assert
             Assert.Null(user);
+        }
+
+        [Fact]
+        public async void GenerateToken_CorrectInput_ReturnToken()
+        {
+            //  arrang
+            Models.SignInInfo info = new Models.SignInInfo
+            {
+                Account = FakeUser.Email,
+                Password = FakeUser.PasswordHash
+            };
+
+            IAccountManager<UserManager> accountManager = new UserManager(_db, redisConn);
+            ScreamBackend.DB.Tables.User userModel;
+            //  act
+            var user = await accountManager.SignInAsync(info);
+            await user.GenerateClaimsAsync();
+            userModel = await _db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.NormalizedEmail == FakeUser.NormalizedEmail);
+
+            //  assert
+            Assert.NotNull(user);
+            Assert.False(string.IsNullOrWhiteSpace(userModel.Token));
         }
     }
 }
