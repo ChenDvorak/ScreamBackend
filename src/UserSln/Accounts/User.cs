@@ -22,13 +22,9 @@ namespace Accounts
 
         internal static string GetCacheKey(int userId) => "USER_" + userId;
 
-        public async Task<bool> IsPasswordMatchAsync(Models.SignInInfo model)
+        public bool IsPasswordMatch(string passwordHash)
         {
-            return await _db.Users.AsNoTracking()
-                .Where(u => (u.Username.Equals(model.Account, StringComparison.OrdinalIgnoreCase)
-                        || u.Email.Equals(model.Account, StringComparison.OrdinalIgnoreCase))
-                        && u.PasswordHash.Equals(model.Password, StringComparison.OrdinalIgnoreCase))
-                .AnyAsync();
+            return model.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
         }
 
         public Claim[] GenerateClaims()

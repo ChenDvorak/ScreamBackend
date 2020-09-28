@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft;
 using Newtonsoft.Json;
+using Accounts;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ScreamBackend.Controllers.Identity
 {
@@ -20,9 +22,10 @@ namespace ScreamBackend.Controllers.Identity
      */
     public class AccountsController : ScreamAPIBase
     {
-        public AccountsController()
-        { 
-
+        private readonly IAccountManager<UserManager> _accountManager;
+        public AccountsController(IAccountManager<UserManager> accountManager)
+        {
+            _accountManager = accountManager;
         }
 
         /*
@@ -57,36 +60,67 @@ namespace ScreamBackend.Controllers.Identity
         }
 
         /*
+         *  Sign in Account
+         *  
+         *  PATCH
+         *  /api/client/accounts/account
+         */
+        [HttpPatch("account")]
+        public async Task<IActionResult> SignInWithAccountAsync([FromBody] string encodingAccount)
+        {
+            if (string.IsNullOrWhiteSpace(encodingAccount))
+            {
+                ModelState.AddModelError(ERRORS, "登录账号不能为空");
+                return BadRequest(ModelState);
+            }
+
+            var decodingAccount =
+                Encoding.UTF8.GetString(Convert.FromBase64String(encodingAccount));
+
+            var user = await _accountManager.GetUserAsync(decodingAccount);
+
+            return user == null ? NotFound() : (IActionResult)Ok();
+        }
+
+        /*
          *  Sign in
          *  
          *  PATCH
-         *  /api/client/accounts/
+         *  /api/client/accounts/password
          */
-        [HttpPatch]
-        public async Task<IActionResult> SignInAsync([FromBody] string encodingModel)
+        [HttpPatch("password")]
+        public async Task<IActionResult> SignInWithPasswordAsync([FromBody] string encodingModel)
         {
-            //if (string.IsNullOrWhiteSpace(encodingModel))
-            //{
-            //    ModelState.AddModelError(ERRORS, "登录信息不能为空");
-            //    return BadRequest(ModelState);
-            //}
+            if (string.IsNullOrWhiteSpace(encodingModel))
+            {
+                ModelState.AddModelError(ERRORS, "登录密码不能为空");
+                return BadRequest(ModelState);
+            }
 
-            //var signInModel = JsonConvert.DeserializeObject<DB.Tables.User>(
-            //    Encoding.UTF8.GetString(Convert.FromBase64String(encodingModel)));
+            var decodingModel = JsonConvert.DeserializeObject<Models.SignInInfo>(
+                Encoding.UTF8.GetString(Convert.FromBase64String(encodingModel)));
+            if (decodingModel == null)
+            {
+                ModelState.AddModelError(ERRORS, "登录信息有误");
+                return BadRequest(ModelState);
+            }
+            var user = await _accountManager.GetUserAsync(decodingModel.Account);
+            if (user == null)
+                return NotFound();
 
-            //await _signInManager.SignInAsync(signInModel, true);
-            //var successed = await _signInManager.CanSignInAsync(signInModel);
+            var isMatch = user.IsPasswordMatch(decodingModel.Password);
+            if (!isMatch)
+            {
+                ModelState.AddModelError(ERRORS, "密码错误");
+                return BadRequest();
+            }
 
-            //if (!successed)
-            //{
-            //    ModelState.AddModelError(ERRORS, "账号或密码错误");
-            //    return BadRequest(ModelState);
-            //}
+            var claims = user.GenerateClaims();
+            var jwtToken = AccountAuthorization.GetJwtSecurityToken(claims);
+            var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
-            //var user = await _userManager.FindByNameAsync(signInModel.UserName);
-            //string token = await _userManager.GetAuthenticationTokenAsync(user, "", "JWT");
-            return Ok();
+            return Ok(token);
+
         }
-
     }
 }

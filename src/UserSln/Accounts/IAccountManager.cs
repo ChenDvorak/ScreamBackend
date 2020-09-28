@@ -12,7 +12,6 @@ namespace Accounts
 
         public Task<AccountResult> AdminSignInAsync(Models.SignInInfo model);
 
-
         public Task<User> GetUserAsync(ClaimsPrincipal principal);
 
         public Task<User> GetUserAsync(string account);
