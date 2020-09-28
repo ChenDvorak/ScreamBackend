@@ -58,12 +58,10 @@ namespace Accounts
         {
             string normalizedAccount = model.Account.ToUpper();
             var userModel = await _db.Users.AsNoTracking()
-                                .Where(u => (u.NormalizedUsername.Equals(normalizedAccount, StringComparison.OrdinalIgnoreCase)
-                                        || u.NormalizedEmail.Equals(normalizedAccount, StringComparison.OrdinalIgnoreCase))
-                                        && u.PasswordHash.Equals(model.Password, StringComparison.OrdinalIgnoreCase))
+                                .Where(u => (u.NormalizedUsername == normalizedAccount || u.NormalizedEmail == normalizedAccount)
+                                        && u.PasswordHash == model.Password)
                                 .SingleOrDefaultAsync();
-
-            return new User(userModel, _db);
+            return userModel == null ? null : new User(userModel, _db);
         }
 
         public Task SignOutAsync(User user)
