@@ -54,9 +54,16 @@ namespace Accounts
             return model;
         }
 
-        public Task<AccountResult> AdminSignInAsync(Models.SignInInfo model)
+        public async Task<User> AdminSignInAsync(Models.SignInInfo model)
         {
-            throw new NotImplementedException();
+            string normalizedAccount = model.Account.ToUpper();
+            var userModel = await _db.Users.AsNoTracking()
+                                .Where(u => (u.NormalizedUsername.Equals(normalizedAccount, StringComparison.OrdinalIgnoreCase)
+                                        || u.NormalizedEmail.Equals(normalizedAccount, StringComparison.OrdinalIgnoreCase))
+                                        && u.PasswordHash.Equals(model.Password, StringComparison.OrdinalIgnoreCase))
+                                .SingleOrDefaultAsync();
+
+            return new User(userModel, _db);
         }
 
         public Task SignOutAsync(User user)

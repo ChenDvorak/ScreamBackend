@@ -10,7 +10,7 @@ namespace Accounts
     {
         public Task<AccountResult> RegisterAsync(Models.RegisterInfo register);
 
-        public Task<AccountResult> AdminSignInAsync(Models.SignInInfo model);
+        public Task<User> AdminSignInAsync(Models.SignInInfo model);
 
         public Task<User> GetUserAsync(ClaimsPrincipal principal);
 
