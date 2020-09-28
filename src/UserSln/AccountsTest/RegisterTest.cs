@@ -17,7 +17,7 @@ namespace AccountsTest
             const string EMAIL = "Dvorak@outlook.com";
             const string NORMALIZED_EMAIL = "DVORAK@OUTLOOK.COM";
             const string PASSWORD = "96cae35ce8a9b0244178bf28e4966c2ce1b8385723a96a6b838858cdd6ca0a1e";
-            const string USERNAME = "dvorak";
+            const string USERNAME = "Dvorak";
             const string NORMALIZED_USERNAME = "DVORAK";
             
             Models.RegisterInfo register = new Models.RegisterInfo
