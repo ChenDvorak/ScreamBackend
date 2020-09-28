@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace Test
+namespace ScreamsTest
 {
     public class IncreaseScreamHidden : DBSeedFactory
     {

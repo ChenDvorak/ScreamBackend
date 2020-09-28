@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Test
+namespace ScreamsTest
 {
     /// <summary>
     /// Test for get screams by class library Scream

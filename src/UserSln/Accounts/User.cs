@@ -27,11 +27,18 @@ namespace Accounts
             return model.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
         }
 
-        public Claim[] GenerateClaims()
+        /// <summary>
+        /// sign in status will change when call this function
+        /// </summary>
+        public async Task<Claim[]> GenerateClaimsAsync()
         {
+            model.Token = Guid.NewGuid().ToString();
+            await Update();
+
             var claims = new[]
             {
-                new Claim(ClaimTypes.PrimarySid, model.Id.ToString())
+                new Claim(ClaimTypes.PrimarySid, model.Id.ToString()),
+                new Claim(ClaimTypes.Hash, model.Token)
             };
             return claims;
         }
@@ -39,8 +46,13 @@ namespace Accounts
         public Task SignOutAsync()
         {
             model.Token = "";
+            return Update();
+        }
+
+        private Task<int> Update()
+        {
             _db.Users.Update(model);
-            return  _db.SaveChangesAsync();
+            return _db.SaveChangesAsync();
         }
     }
 }

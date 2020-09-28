@@ -37,24 +37,21 @@ namespace ScreamBackend.Controllers.Identity
         [HttpPost]
         public async Task<IActionResult> RegisterAsync([FromBody] string encodingModel)
         {
-            //if (string.IsNullOrWhiteSpace(encodingModel))
-            //{
-            //    ModelState.AddModelError(ERRORS, "注册信息不能为空");
-            //    return BadRequest(ModelState);
-            //}
+            if (string.IsNullOrWhiteSpace(encodingModel))
+            {
+                ModelState.AddModelError(ERRORS, "注册信息不能为空");
+                return BadRequest(ModelState);
+            }
 
-            //var newUser = JsonConvert.DeserializeObject<DB.Tables.User>(
-            //    Encoding.UTF8.GetString(Convert.FromBase64String(encodingModel))
-            //);
-            //var result = await _userManager.CreateAsync(newUser);
-            //if (!result.Succeeded)
-            //{
-            //    foreach (var error in result.Errors)
-            //    {
-            //        ModelState.AddModelError(ERRORS, error.Description);
-            //    }
-            //    return BadRequest(ModelState);
-            //}
+            var newUser = JsonConvert.DeserializeObject<Models.RegisterInfo>(
+                Encoding.UTF8.GetString(Convert.FromBase64String(encodingModel))
+            );
+            var result = await _accountManager.RegisterAsync(newUser);
+            if (!result.Succeeded)
+            {
+                ParseModelStateErrors(result.Errors);
+                return BadRequest(ModelState);
+            }
 
             return Ok();
         }
@@ -63,9 +60,9 @@ namespace ScreamBackend.Controllers.Identity
          *  Sign in Account
          *  
          *  PATCH
-         *  /api/client/accounts/account
+         *  /api/client/accounts
          */
-        [HttpPatch("account")]
+        [HttpPatch]
         public async Task<IActionResult> SignInWithAccountAsync([FromBody] string encodingAccount)
         {
             if (string.IsNullOrWhiteSpace(encodingAccount))
@@ -115,7 +112,7 @@ namespace ScreamBackend.Controllers.Identity
                 return BadRequest();
             }
 
-            var claims = user.GenerateClaims();
+            var claims = await user.GenerateClaimsAsync();
             var jwtToken = AccountAuthorization.GetJwtSecurityToken(claims);
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 

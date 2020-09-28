@@ -7,6 +7,7 @@ namespace Accounts
         public static void UseAccount(this IServiceCollection services)
         {
             services.AddScoped<IAccountManager<UserManager>, UserManager>();
+            services.AddScoped<IAccountManager<AdminManager>, AdminManager>();
         }
     }
 }

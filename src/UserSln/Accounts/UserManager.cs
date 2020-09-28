@@ -54,7 +54,7 @@ namespace Accounts
             return model;
         }
 
-        public async Task<User> AdminSignInAsync(Models.SignInInfo model)
+        public async Task<User> SignInAsync(Models.SignInInfo model)
         {
             string normalizedAccount = model.Account.ToUpper();
             var userModel = await _db.Users.AsNoTracking()

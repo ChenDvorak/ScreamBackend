@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Test
+namespace ScreamsTest
 {
     public class RemoveCommentTest : DBSeedFactory
     {

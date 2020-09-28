@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using Xunit;
 
-namespace Test
+namespace ScreamsTest
 {
     /// <summary>
     /// Test post function of class library of sceram

@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -22,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DB\DB.csproj" />
     <ProjectReference Include="..\..\Infrastructures\Infrastructures.csproj" />
-    <ProjectReference Include="..\Screams\Screams.csproj" />
+    <ProjectReference Include="..\Accounts\Accounts.csproj" />
   </ItemGroup>
 
 </Project>

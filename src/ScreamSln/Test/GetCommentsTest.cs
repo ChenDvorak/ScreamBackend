@@ -5,7 +5,7 @@ using System.Text;
 using Xunit;
 using Screams.Comments;
 
-namespace Test
+namespace ScreamsTest
 {
     public class GetCommentsTest : DBSeedFactory
     {

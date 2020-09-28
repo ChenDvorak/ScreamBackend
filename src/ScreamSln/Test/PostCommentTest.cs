@@ -6,7 +6,7 @@ using Xunit;
 using Screams.Comments;
 using System.Threading.Tasks;
 
-namespace Test
+namespace ScreamsTest
 {
     public class PostCommentTest : DBSeedFactory
     {

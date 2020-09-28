@@ -8,7 +8,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace ScreamsTest
+namespace AccountsTest
 {
     /// <summary>
     /// Base class of initialize database both InMemory and Redis
@@ -58,102 +58,20 @@ namespace ScreamsTest
 
             FakeUser = new ScreamBackend.DB.Tables.User
             {
-                Username = "Dvorak",
-                NormalizedUsername = "DVORAK",
-                Email = "dvorak@outlook.com",
-                NormalizedEmail = "DVORAK@OUTLOOK.COM",
+                Username = "default",
+                NormalizedUsername = "DEFAULT",
+                Email = "default@outlook.com",
+                NormalizedEmail = "DEFAULT@OUTLOOK.COM",
                 IsAdmin = false,
                 CreateDateTime = DateTime.Now,
-                Avatar = "",
-                PasswordHash = "96cae35ce8a9b0244178bf28e4966c2ce1b8385723a96a6b838858cdd6ca0a1e"
+                Avatar = ""
             };
 
             if (!context.Users.Any())
                 context.Users.Add(FakeUser);
-            if (!context.Screams.Any())
-                context.Screams.AddRange(FakerScreamModels);
 
             int _ = context.SaveChanges();
         }
-
-        /// <summary>
-        /// size 12
-        /// </summary>
-        protected List<ScreamBackend.DB.Tables.Scream> FakerScreamModels => new List<ScreamBackend.DB.Tables.Scream>
-        {
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_1",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_2",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_3",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_4",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_5",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_6",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_7",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_8",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_9",
-                ContentLength = 10
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_10",
-                ContentLength = 11
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_11",
-                ContentLength = 11,
-            },
-            new ScreamBackend.DB.Tables.Scream
-            {
-                Author = FakeUser,
-                Content = "TEST: SCREAM ITEM_12",
-                ContentLength = 11
-            },
-        };
 
         protected virtual void Dispose(bool disposing)
         {
