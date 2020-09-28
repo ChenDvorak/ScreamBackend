@@ -77,8 +77,13 @@ namespace Accounts
             if (!int.TryParse(await _redis.HashGetAsync(key, nameof(ScreamBackend.DB.Tables.User.Id)), out userId))
                 model.Id = userId;
 
-#warning THIS
-            throw new NotImplementedException();
+            return await GetUserFromIdAsync(userId);
+        }
+
+        public async Task<User> GetUserFromIdAsync(int id)
+        {
+            var model = await _db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
+            return new User(model, _db);
         }
 
         public async Task<User> GetUserAsync(string account)
