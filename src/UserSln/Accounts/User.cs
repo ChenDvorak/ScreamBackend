@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Accounts
 {
-    public class User
+    public abstract class User
     {
         public readonly ScreamBackend.DB.Tables.User Model;
-        private readonly ScreamDB _db;
+        protected readonly ScreamDB _db;
 
         internal User(ScreamBackend.DB.Tables.User model, ScreamDB db)
         {
@@ -22,34 +22,20 @@ namespace Accounts
 
         internal static string GetCacheKey(int userId) => "USER_" + userId;
 
-        public bool IsPasswordMatch(string passwordHash)
-        {
-            return Model.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
-        }
+        public abstract bool IsPasswordMatch(string passwordHash);
 
         /// <summary>
         /// sign in status will change when call this function
         /// </summary>
-        public async Task<Claim[]> GenerateClaimsAsync()
-        {
-            Model.Token = Guid.NewGuid().ToString();
-            await Update();
+        public abstract Task<Claim[]> GenerateClaimsAsync();
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.PrimarySid, Model.Id.ToString()),
-                new Claim(ClaimTypes.Hash, Model.Token)
-            };
-            return claims;
-        }
-
-        public Task SignOutAsync()
+        public virtual Task SignOutAsync()
         {
             Model.Token = "";
             return Update();
         }
 
-        private Task<int> Update()
+        protected virtual Task<int> Update()
         {
             _db.Users.Update(Model);
             return _db.SaveChangesAsync();

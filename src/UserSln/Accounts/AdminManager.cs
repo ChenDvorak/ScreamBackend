@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ScreamBackend.DB;
+using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
@@ -8,6 +10,14 @@ namespace Accounts
 {
     public class AdminManager : IAccountManager<AdminManager>
     {
+        private readonly ScreamDB _db;
+        private readonly IDatabase _redis;
+        public AdminManager(ScreamDB db, ConnectionMultiplexer redisConn)
+        {
+            _db = db;
+            _redis = redisConn.GetDatabase();
+        }
+
         public Task<User> GetUserAsync(ClaimsPrincipal principal)
         {
             throw new NotImplementedException();
@@ -26,6 +36,11 @@ namespace Accounts
         public Task<User> SignInAsync(Models.SignInInfo model)
         {
             throw new NotImplementedException();
+        }
+
+        private Administrator ReturnAdmimistartor(ScreamBackend.DB.Tables.User userModel)
+        {
+            return userModel == null ? null : new Administrator(userModel, _db);
         }
     }
 }

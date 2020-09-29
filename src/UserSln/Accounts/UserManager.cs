@@ -108,7 +108,7 @@ namespace Accounts
 
         private User ReturnUser(ScreamBackend.DB.Tables.User user)
         {
-            return user == null ? null : new User(user, _db);
+            return user == null ? null : new Client(user, _db);
         }
     }
 }
