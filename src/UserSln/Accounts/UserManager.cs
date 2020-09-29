@@ -61,7 +61,7 @@ namespace Accounts
                                 .Where(u => (u.NormalizedUsername == normalizedAccount || u.NormalizedEmail == normalizedAccount)
                                         && u.PasswordHash == model.Password)
                                 .SingleOrDefaultAsync();
-            return userModel == null ? null : new User(userModel, _db);
+            return ReturnUser(userModel);
         }
 
         public Task SignOutAsync(User user)
@@ -79,8 +79,8 @@ namespace Accounts
 
             ScreamBackend.DB.Tables.User model = new ScreamBackend.DB.Tables.User();
 
-            if (!int.TryParse(await _redis.HashGetAsync(key, nameof(ScreamBackend.DB.Tables.User.Id)), out userId))
-                model.Id = userId;
+            //if (!int.TryParse(await _redis.HashGetAsync(key, nameof(ScreamBackend.DB.Tables.User.Id)), out userId))
+            //    model.Id = userId;
 
             return await GetUserFromIdAsync(userId);
         }
@@ -88,7 +88,7 @@ namespace Accounts
         public async Task<User> GetUserFromIdAsync(int id)
         {
             var model = await _db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
-            return new User(model, _db);
+            return ReturnUser(model);
         }
 
         public async Task<User> GetUserAsync(string account)
@@ -96,12 +96,19 @@ namespace Accounts
             if (string.IsNullOrWhiteSpace(account))
                 return null;
 
+            string normalizedEmail = Formator.EmailNormaliz(account);
+            string normalizedUsername = Formator.UsernameNormaliz(account);
+
             var user = await _db.Users.AsNoTracking()
-                .Where(u => u.Username.Equals(account, StringComparison.OrdinalIgnoreCase)
-                        || u.Email.Equals(account, StringComparison.OrdinalIgnoreCase))
+                .Where(u => u.NormalizedUsername == normalizedUsername
+                        || u.NormalizedEmail == normalizedEmail)
                 .SingleOrDefaultAsync();
-            return new User(user, _db);
+            return ReturnUser(user);
         }
 
+        private User ReturnUser(ScreamBackend.DB.Tables.User user)
+        {
+            return user == null ? null : new User(user, _db);
+        }
     }
 }
