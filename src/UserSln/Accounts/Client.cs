@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Accounts
 {
-    public class Client : User
+    public class Client : AbstractUser
     {
         internal Client(ScreamBackend.DB.Tables.User model, ScreamDB db) : base(model, db)
         {

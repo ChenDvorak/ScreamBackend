@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Accounts
 {
-    public class Administrator : User
+    public class Administrator : AbstractUser
     {
         public Administrator(ScreamBackend.DB.Tables.User model, ScreamDB db) : base(model, db)
         {

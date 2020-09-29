@@ -24,5 +24,9 @@
     <ProjectReference Include="..\..\UserSln\Accounts\Accounts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Administartor\" />
+  </ItemGroup>
+
 
 </Project>

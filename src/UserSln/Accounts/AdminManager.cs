@@ -1,46 +1,35 @@
-﻿using ScreamBackend.DB;
+﻿using Microsoft.EntityFrameworkCore;
+using ScreamBackend.DB;
+using ScreamBackend.DB.Tables;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Accounts
 {
-    public class AdminManager : IAccountManager<AdminManager>
+    public class AdminManager : AbstractManager<AdminManager>
     {
-        private readonly ScreamDB _db;
-        private readonly IDatabase _redis;
-        public AdminManager(ScreamDB db, ConnectionMultiplexer redisConn)
-        {
-            _db = db;
-            _redis = redisConn.GetDatabase();
-        }
+        public AdminManager(ScreamDB db, ConnectionMultiplexer redisConn): base(db, redisConn)
+        { }
 
-        public Task<User> GetUserAsync(ClaimsPrincipal principal)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<User> GetUserAsync(string account)
+        public override async Task<AbstractUser> SignInAsync(Models.SignInInfo model)
         {
-            throw new NotImplementedException();
+            string normalizedAccount = model.Account.ToUpper();
+            var userModel = await _db.Users.AsNoTracking()
+                                .Where(u => (u.NormalizedUsername == normalizedAccount || u.NormalizedEmail == normalizedAccount)
+                                        && u.PasswordHash == model.Password
+                                        && u.IsAdmin)
+                                .SingleOrDefaultAsync();
+            return ReturnUser(userModel);
         }
-
-        public Task<AccountResult> RegisterAsync(Models.RegisterInfo register)
+        protected override AbstractUser ReturnUser(User user)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> SignInAsync(Models.SignInInfo model)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Administrator ReturnAdmimistartor(ScreamBackend.DB.Tables.User userModel)
-        {
-            return userModel == null ? null : new Administrator(userModel, _db);
+            return user == null ? null : new Administrator(user, _db);
         }
     }
 }

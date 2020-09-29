@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Accounts
 {
-    public abstract class User
+    public abstract class AbstractUser
     {
         public readonly ScreamBackend.DB.Tables.User Model;
         protected readonly ScreamDB _db;
 
-        internal User(ScreamBackend.DB.Tables.User model, ScreamDB db)
+        internal AbstractUser(ScreamBackend.DB.Tables.User model, ScreamDB db)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             _db = db ?? throw new ArgumentNullException(nameof(db));
