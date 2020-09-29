@@ -22,9 +22,13 @@ namespace AccountsTest
         /// </summary>
         protected readonly ScreamBackend.DB.ScreamDB _db;
         /// <summary>
-        /// The Faker User to test
+        /// The Faker Client to test
         /// </summary>
         protected ScreamBackend.DB.Tables.User FakeUser;
+        /// <summary>
+        /// The Fake Admin to test
+        /// </summary>
+        protected ScreamBackend.DB.Tables.User FakeAdmin;
         /// <summary>
         /// Redis
         /// </summary>
@@ -68,12 +72,33 @@ namespace AccountsTest
                 PasswordHash = "96cae35ce8a9b0244178bf28e4966c2ce1b8385723a96a6b838858cdd6ca0a1e"
             };
 
-            if (!context.Users.Any())
+            if (!context.Users.Any(u => !u.IsAdmin))
                 context.Users.Add(FakeUser);
 
-            int _ = context.SaveChanges();
+            _ = context.SaveChanges();
         }
 
+        protected void CreateAdministartor()
+        {
+            using var context = new ScreamBackend.DB.ScreamDB(contextOptions);
+
+            FakeAdmin = new ScreamBackend.DB.Tables.User
+            {
+                Username = "Administartor",
+                NormalizedUsername = "ADMINISTARTOR",
+                Email = "Administartor@outlook.com",
+                NormalizedEmail = "ADMINISTARTOR@OUTLOOK.COM",
+                IsAdmin = true,
+                CreateDateTime = DateTime.Now,
+                Avatar = "",
+                PasswordHash = "96cae35ce8a9b0244178bf28e4966c2ce1b8385723a96a6b838858cdd6ca0a1e",
+            };
+
+            if (!context.Users.Any(u => u.IsAdmin))
+                context.Users.Add(FakeAdmin);
+
+            _ = context.SaveChanges();
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

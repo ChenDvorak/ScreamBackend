@@ -10,13 +10,7 @@ namespace Accounts
     public class Client : AbstractUser
     {
         internal Client(ScreamBackend.DB.Tables.User model, ScreamDB db) : base(model, db)
-        {
-        }
-
-        public override bool IsPasswordMatch(string passwordHash)
-        {
-            return Model.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
-        }
+        { }
 
         /// <summary>
         /// sign in status will change when call this function

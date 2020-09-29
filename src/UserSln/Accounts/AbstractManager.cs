@@ -60,7 +60,7 @@ namespace Accounts
 
             var user = await GetUserFromEmailAsync(register.Email);
             if (user != null)
-                return AccountResult.Unsuccessful("");
+                return AccountResult.Unsuccessful("已经被使用的邮箱");
 
             user = new ScreamBackend.DB.Tables.User
             {

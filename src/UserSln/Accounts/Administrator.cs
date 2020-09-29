@@ -10,17 +10,21 @@ namespace Accounts
     public class Administrator : AbstractUser
     {
         public Administrator(ScreamBackend.DB.Tables.User model, ScreamDB db) : base(model, db)
+        { }
+
+        public override async Task<Claim[]> GenerateClaimsAsync()
         {
+            Model.Token = Guid.NewGuid().ToString();
+            await Update();
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.PrimarySid, Model.Id.ToString()),
+                new Claim(ClaimTypes.Role, nameof(Administrator)),
+                new Claim(ClaimTypes.Hash, Model.Token)
+            };
+            return claims;
         }
 
-        public override Task<Claim[]> GenerateClaimsAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsPasswordMatch(string passwordHash)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

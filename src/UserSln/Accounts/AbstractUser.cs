@@ -22,7 +22,10 @@ namespace Accounts
 
         internal static string GetCacheKey(int userId) => "USER_" + userId;
 
-        public abstract bool IsPasswordMatch(string passwordHash);
+        public virtual bool IsPasswordMatch(string passwordHash)
+        {
+            return Model.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
+        }
 
         /// <summary>
         /// sign in status will change when call this function
