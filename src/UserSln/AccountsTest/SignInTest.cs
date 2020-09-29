@@ -31,6 +31,20 @@ namespace AccountsTest
         }
 
         [Fact]
+        public async void SignIn_Password_ReturnSucceeded()
+        {
+            //  arrange
+            IAccountManager<UserManager> accountManager = new UserManager(_db, redisConn);
+
+            //  act
+            var user = await accountManager.GetUserAsync(FakeUser.Email);
+            var isMatch = user.IsPasswordMatch(FakeUser.PasswordHash);
+
+            //  assert
+            Assert.True(isMatch);
+        }
+
+        [Fact]
         public async void SignIn_WrongPassword_ReturnSucceeded()
         {
             //  arrang

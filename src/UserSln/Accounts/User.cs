@@ -11,12 +11,12 @@ namespace Accounts
 {
     public class User
     {
-        private readonly ScreamBackend.DB.Tables.User model;
+        public readonly ScreamBackend.DB.Tables.User Model;
         private readonly ScreamDB _db;
 
         internal User(ScreamBackend.DB.Tables.User model, ScreamDB db)
         {
-            this.model = model ?? throw new ArgumentNullException(nameof(model));
+            Model = model ?? throw new ArgumentNullException(nameof(model));
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
@@ -24,7 +24,7 @@ namespace Accounts
 
         public bool IsPasswordMatch(string passwordHash)
         {
-            return model.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
+            return Model.PasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -32,26 +32,26 @@ namespace Accounts
         /// </summary>
         public async Task<Claim[]> GenerateClaimsAsync()
         {
-            model.Token = Guid.NewGuid().ToString();
+            Model.Token = Guid.NewGuid().ToString();
             await Update();
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.PrimarySid, model.Id.ToString()),
-                new Claim(ClaimTypes.Hash, model.Token)
+                new Claim(ClaimTypes.PrimarySid, Model.Id.ToString()),
+                new Claim(ClaimTypes.Hash, Model.Token)
             };
             return claims;
         }
 
         public Task SignOutAsync()
         {
-            model.Token = "";
+            Model.Token = "";
             return Update();
         }
 
         private Task<int> Update()
         {
-            _db.Users.Update(model);
+            _db.Users.Update(Model);
             return _db.SaveChangesAsync();
         }
     }
