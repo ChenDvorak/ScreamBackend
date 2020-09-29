@@ -7,8 +7,12 @@ using Xunit;
 
 namespace AccountsTest
 {
-    public class SignOutTest : DBSeedFactory
+    public class AdminSignOutTest : DBSeedFactory
     {
+        public AdminSignOutTest() : base()
+        {
+            CreateAdministartor();
+        }
 
         [Fact]
         public async void SignOut_SignInInput_ReturnEmptyToken()
@@ -17,8 +21,8 @@ namespace AccountsTest
             const string EXPECT_TOKEN = "";
             Models.SignInInfo info = new Models.SignInInfo
             {
-                Account = FakeUser.Email,
-                Password = FakeUser.PasswordHash
+                Account = FakeAdmin.Email,
+                Password = FakeAdmin.PasswordHash
             };
 
             IAccountManager<UserManager> accountManager = new UserManager(_db, redisConn);
