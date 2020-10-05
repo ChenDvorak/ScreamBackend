@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using Infrastructures;
 using Screams;
 using Accounts;
-using ScreamBackend.ServitesExtension;
+using ScreamBackend.ServicesExtension;
 
 namespace ScreamBackend
 {

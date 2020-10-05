@@ -44,7 +44,7 @@ namespace IntegrationTests
             }
         }
 
-        private static ScreamBackend.DB.Tables.User FakeUser => new ScreamBackend.DB.Tables.User
+        public static ScreamBackend.DB.Tables.User FakeUser => new ScreamBackend.DB.Tables.User
         {
             Username = "Dvorak",
             NormalizedUsername = "DVORAK",

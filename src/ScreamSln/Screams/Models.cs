@@ -13,7 +13,7 @@ namespace Screams
         /// </summary>
         public struct NewScreamtion
         {
-            public User Author { get; set; }
+            public int AuthorId { get; set; }
             [Required(ErrorMessage = "内容至少5个字"), MinLength(5)]
             public string Content { get; set; }
         }

@@ -27,7 +27,7 @@ namespace ScreamsTest
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             { 
-                Author = FakeUser,
+                AuthorId = FakeUser.Id,
                 Content = CONTENT
             };
 
@@ -57,37 +57,8 @@ namespace ScreamsTest
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             {
-                Author = FakeUser,
+                AuthorId = FakeUser.Id,
                 Content = ""
-            };
-
-            //  act
-            var result = await screamsManager.PostScreamAsync(fakerNewScream);
-
-            //  assert
-            Assert.False(result.Succeeded);
-            Assert.Equal(result.Data, NOT_DATA);
-            Assert.NotNull(result.Errors);
-            Assert.Equal(result.Errors.Count, ERRORS_COUNT);
-            Assert.Equal(result.Errors[0], ERRORS_CONTENT);
-        }
-
-        /// <summary>
-        /// Test shall be unsuccessful if author empty
-        /// </summary>
-        [Fact]
-        public async void PostScream_EmptyAuthorData_ReturnUnsuccessful()
-        {
-            //  arrange
-            const int ERRORS_COUNT = 1;
-            const string ERRORS_CONTENT = "作者不能为空";
-
-            Screams.Screams.IScreamsManager screamsManager = new Screams.Screams.DefaultScreamsManager(
-                _db, redisConn);
-            Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
-            {
-                Author = null,
-                Content = "TEST: NEW SCREAM CONTENT UNSUCCESSFUL"
             };
 
             //  act
@@ -120,7 +91,7 @@ namespace ScreamsTest
                 _db, redisConn);
             Screams.Models.NewScreamtion fakerNewScream = new Screams.Models.NewScreamtion
             {
-                Author = fakerAuthor,
+                AuthorId = fakerAuthor.Id,
                 Content = "TEST: NEW SCREAM CONTENT UNSUCCESSFUL"
             };
 

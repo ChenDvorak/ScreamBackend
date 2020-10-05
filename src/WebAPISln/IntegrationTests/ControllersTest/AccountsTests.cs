@@ -1,10 +1,15 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
+using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
 using Moq;
+using System.IO;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,15 +24,24 @@ namespace IntegrationTests.ControllersTest
         }
 
         [Fact]
-        public async void Register_Account_Return_BadRequestResult()
+        public async void Register_ExistAccount_Return_BadRequestResult()
         {
             //  Arrange
             var client = _factory.CreateClient();
+            Accounts.Models.RegisterInfo info = new Accounts.Models.RegisterInfo
+            { 
+                Email = Utilities.FakeUser.Email,
+                Password = Utilities.FakeUser.PasswordHash,
+                ConfirmPassword = Utilities.FakeUser.PasswordHash
+            };
+            var data = Newtonsoft.Json.JsonConvert.SerializeObject(info);
+            var content = new StringContent(data, Encoding.UTF8, "application/json");
 
             //  Act
-            var response = await client.PostAsync("", null);
+            var response = await client.PostAsync("/api/client/accounts", content);
 
             //  Assert
+            response.EnsureSuccessStatusCode();
             
         }
     }

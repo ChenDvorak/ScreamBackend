@@ -80,7 +80,7 @@ namespace ScreamBackend.Controllers.Identity
         }
 
         /*
-         *  Sign in
+         *  Sign in with password
          *  
          *  PATCH
          *  /api/client/accounts/password

@@ -15,13 +15,13 @@ namespace ScreamBackend.Controllers.ScreamsManager
     public class ScreamsController : ScreamAPIBase
     {
         private readonly Screams.Screams.IScreamsManager _screamsManager;
-        private readonly UserManager<DB.Tables.User> _userManager;
+        private readonly Accounts.IAccountManager<DB.Tables.User> _accountManager;
         public ScreamsController(
             Screams.Screams.IScreamsManager _screamsManager,
-            UserManager<DB.Tables.User> _userManager)
+            Accounts.IAccountManager<DB.Tables.User> _accountManager)
         {
             this._screamsManager = _screamsManager;
-            this._userManager = _userManager;
+            this._accountManager = _accountManager;
         }
 
         /*
@@ -62,11 +62,11 @@ namespace ScreamBackend.Controllers.ScreamsManager
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userModel = await _userManager.GetUserAsync(User);
+            var userModel = await _accountManager.GetUserAsync(User);
             if (userModel == null)
                 return Unauthorized();
 
-            model.Author = userModel;
+            model.AuthorId = userModel.Model.Id;
 
             var result = await _screamsManager.PostScreamAsync(model);
             if (result.Succeeded)

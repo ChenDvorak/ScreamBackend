@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScreamBackend.ServitesExtension
+namespace ScreamBackend.ServicesExtension
 {
     public static class AuthorizationExtension
     {
