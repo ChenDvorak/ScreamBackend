@@ -36,12 +36,15 @@ namespace IntegrationTests.ControllersTest
             };
             var data = Newtonsoft.Json.JsonConvert.SerializeObject(info);
             var content = new StringContent(data, Encoding.UTF8, "application/json");
+            var actualEmail = "";
 
             //  Act
             var response = await client.PostAsync("/api/client/accounts", content);
+            actualEmail = await response.Content.ReadAsStringAsync();
 
             //  Assert
             response.EnsureSuccessStatusCode();
+            Assert.Equal(info.Email, actualEmail);
             
         }
     }

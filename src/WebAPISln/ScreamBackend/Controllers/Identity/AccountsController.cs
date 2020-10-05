@@ -53,7 +53,7 @@ namespace ScreamBackend.Controllers.Identity
                 return BadRequest(ModelState);
             }
 
-            return Ok();
+            return Created(result.Data, null);
         }
 
         /*

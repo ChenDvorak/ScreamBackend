@@ -8,7 +8,12 @@ namespace Accounts
 {
     public interface IAccountManager<T> where T : class
     {
-        public Task<AccountResult> RegisterAsync(Models.RegisterInfo register);
+        /// <summary>
+        /// Register user
+        /// </summary>
+        /// <param name="register"></param>
+        /// <returns>return email in data of AccountResult if successful</returns>
+        public Task<AccountResult<string>> RegisterAsync(Models.RegisterInfo register);
 
         public Task<AbstractUser> SignInAsync(Models.SignInInfo model);
 

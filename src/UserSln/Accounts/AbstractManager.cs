@@ -53,14 +53,14 @@ namespace Accounts
                 .SingleOrDefaultAsync();
             return ReturnUser(user);
         }
-        public virtual async Task<AccountResult> RegisterAsync(Models.RegisterInfo register)
+        public virtual async Task<AccountResult<string>> RegisterAsync(Models.RegisterInfo register)
         {
             if (register.Password != register.ConfirmPassword)
-                return AccountResult.Unsuccessful("两次密码不一致");
+                return AccountResult.Unsuccessful(data: "", "两次密码不一致");
 
             var user = await GetUserFromEmailAsync(register.Email);
             if (user != null)
-                return AccountResult.Unsuccessful("已经被使用的邮箱");
+                return AccountResult.Unsuccessful(data: "", "已经被使用的邮箱");
 
             user = new ScreamBackend.DB.Tables.User
             {
@@ -74,7 +74,7 @@ namespace Accounts
             _db.Users.Add(user);
             int effects = await _db.SaveChangesAsync();
             if (effects == 1)
-                return AccountResult.Successful;
+                return AccountResult.Successful(user.Email);
             throw new Exception("Register fail");
         }
 

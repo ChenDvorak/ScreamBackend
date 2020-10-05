@@ -13,10 +13,16 @@ namespace Accounts
         /// <summary>
         /// Return a result of succeed
         /// </summary>
-        public static AccountResult Successful => new AccountResult
+        public static AccountResult Successful() => new AccountResult
         {
             Succeeded = true
         };
+
+        public static AccountResult<T> Successful<T>(T data)
+        {
+            var result = Successful();
+            return AccountResult<T>.Parse(result, data, new List<string>());
+        }
 
         public static AccountResult Unsuccessful(params string[] errors)
         {
@@ -27,6 +33,12 @@ namespace Accounts
             };
         }
 
+        public static AccountResult<T> Unsuccessful<T>(T data, params string[] errors)
+        {
+            var baseResult = Unsuccessful(errors);
+            return AccountResult<T>.Parse(baseResult, data, baseResult.Errors);
+        }
+
         public bool Succeeded { get; protected set; }
 
         public ICollection<string> Errors { get; set; }
@@ -34,22 +46,7 @@ namespace Accounts
 
     public class AccountResult<T> : AccountResult
     {
-        /// <summary>
-        /// Return a result of succeed
-        /// </summary>
-        public static new AccountResult<T> Successful(T data)
-        {
-            var result = AccountResult.Successful as AccountResult<T>;
-            result.Data = data;
-            return result;
-        }
-
-        public static AccountResult Unsuccessful(T data, params string[] errors)
-        {
-            var baseResult = Unsuccessful(errors);
-            return Parse(baseResult, data, baseResult.Errors);
-        }
-        private static AccountResult<T> Parse(AccountResult baseResult, T data, ICollection<string> errors)
+        internal static AccountResult<T> Parse(AccountResult baseResult, T data, ICollection<string> errors)
         {
             var result = new AccountResult<T>
             {
