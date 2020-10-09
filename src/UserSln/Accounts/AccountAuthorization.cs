@@ -9,7 +9,7 @@ namespace Accounts
 {
     public class AccountAuthorization
     {
-        public static readonly string Issuer = "ValidIssuer";
+        public static readonly string Issuer = "https://scream.com";
         public static readonly string Audience = "ValidAudience";
         public static readonly byte[] SigningKey = Encoding.UTF8.GetBytes("a8424887-7e2a-45e6-b59f-ae84caaf156d");
         public static readonly int ExpireMinutes = 44640;

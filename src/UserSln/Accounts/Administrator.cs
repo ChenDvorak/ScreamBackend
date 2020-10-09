@@ -9,6 +9,10 @@ namespace Accounts
 {
     public class Administrator : AbstractUser
     {
+        /// <summary>
+        /// The name of role that is administrator 
+        /// </summary>
+        public const string ROLE_NAME = nameof(Administrator);
         public Administrator(ScreamBackend.DB.Tables.User model, ScreamDB db) : base(model, db)
         { }
 
@@ -19,9 +23,9 @@ namespace Accounts
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.PrimarySid, Model.Id.ToString()),
-                new Claim(ClaimTypes.Role, nameof(Administrator)),
-                new Claim(ClaimTypes.Hash, Model.Token)
+                new Claim(ClaimTypes.PrimarySid, Model.Id.ToString(), null, AccountAuthorization.Issuer),
+                new Claim(ClaimTypes.Role, ROLE_NAME, null, AccountAuthorization.Issuer),
+                new Claim(ClaimTypes.Hash, Model.Token, null, AccountAuthorization.Issuer)
             };
             return claims;
         }

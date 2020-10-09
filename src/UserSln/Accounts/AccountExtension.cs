@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization.Policy;
+using Accounts.Authorizations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Accounts
 {
@@ -8,6 +11,13 @@ namespace Accounts
         {
             services.AddScoped<IAccountManager<UserManager>, UserManager>();
             services.AddScoped<IAccountManager<AdminManager>, AdminManager>();
+
+            services.AddSingleton<IAuthorizationHandler, IsAdministratorHandler>();
+
+            services.AddAuthorizationCore(options =>
+            {
+                options.AddPolicy(IsAdministratorPolicy.POLICY, policy => policy.Requirements.Add(new IsAdministratorRequirement()));
+            });
         }
     }
 }

@@ -22,8 +22,8 @@ namespace Accounts
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.PrimarySid, Model.Id.ToString()),
-                new Claim(ClaimTypes.Hash, Model.Token)
+                new Claim(ClaimTypes.PrimarySid, Model.Id.ToString(), null, AccountAuthorization.Issuer),
+                new Claim(ClaimTypes.Hash, Model.Token, null, AccountAuthorization.Issuer)
             };
             return claims;
         }
