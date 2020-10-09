@@ -12,13 +12,6 @@ namespace Accounts.Authorizations
 {
     public class IsAdministratorHandler : AuthorizationHandler<IsAdministratorRequirement>
     {
-        private readonly ScreamDB _db;
-        private readonly IDatabase _redis;
-        public IsAdministratorHandler(ScreamDB _db, ConnectionMultiplexer redis)
-        {
-            this._db = _db;
-            _redis = redis.GetDatabase();
-        }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsAdministratorRequirement requirement)
         {

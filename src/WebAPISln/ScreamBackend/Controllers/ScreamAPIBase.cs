@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ScreamBackend.Controllers
 {
-    [Route("api/client/[controller]")]
+    [Route("api/administrator/[controller]")]
     [ApiController]
     public class ScreamAPIBase : ControllerBase
     {
