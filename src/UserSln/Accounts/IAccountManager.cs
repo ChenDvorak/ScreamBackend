@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Accounts
@@ -16,7 +13,11 @@ namespace Accounts
         public Task<AccountResult<string>> RegisterAsync(Models.RegisterInfo register);
 
         public Task<AbstractUser> SignInAsync(Models.SignInInfo model);
-
+        /// <summary>
+        /// Get user by ClaimsPrincipal
+        /// </summary>
+        /// <param name="principal"></param>
+        /// <returns>User or null if not exist</returns>
         public Task<AbstractUser> GetUserAsync(ClaimsPrincipal principal);
 
         public Task<AbstractUser> GetUserAsync(string account);

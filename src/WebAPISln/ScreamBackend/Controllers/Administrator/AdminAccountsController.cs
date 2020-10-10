@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,11 @@ namespace ScreamBackend.Controllers.Administrator
     /// </summary>
     public class AdminAccountsController : BaseAdministratorController
     {
+        private readonly IAccountManager<AdminManager> _administartor;
+        public AdminAccountsController(IAccountManager<AdminManager> _administartor)
+        {
+            this._administartor = _administartor;
+        }
 
         /*
          *  administrator log out
@@ -20,9 +26,12 @@ namespace ScreamBackend.Controllers.Administrator
          *  route: api/administrator/AdminAccounts
          */
         [HttpPatch]
-        public void LogOutAsync()
+        public async Task<IActionResult> LogOutAsync()
         {
-
+            var currentAdmin = _administartor.GetUserAsync(User);
+            if (currentAdmin == null)
+                return Unauthorized();
+            throw new NotImplementedException();
         }
     }
 }
