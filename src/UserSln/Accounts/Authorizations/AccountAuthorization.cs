@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Accounts
+namespace Accounts.Authorizations
 {
     public class AccountAuthorization
     {

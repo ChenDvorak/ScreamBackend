@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using ScreamBackend.DB;
 using StackExchange.Redis;
 using System;
@@ -12,8 +13,13 @@ namespace Accounts.Authorizations
 {
     public class IsAdministratorHandler : AuthorizationHandler<IsAdministratorRequirement>
     {
+        private readonly ScreamDB _db;
+        public IsAdministratorHandler(ScreamDB _db)
+        {
+            this._db = _db;
+        }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsAdministratorRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsAdministratorRequirement requirement)
         {
             if (!context.User.HasClaim(c => c.Issuer == AccountAuthorization.Issuer &&
                                         c.Type == ClaimTypes.PrimarySid &&
@@ -21,17 +27,37 @@ namespace Accounts.Authorizations
                                         c.Type == ClaimTypes.Hash))
             {
                 context.Fail();
-                return Task.CompletedTask;
+                return;
             }
 
-            //  Validate is administartor
-            if (!int.TryParse(context.User.Claims.First(c => c.Type == ClaimTypes.PrimarySid).Value, out int id))
-                return Task.CompletedTask;
+            var claims = context.User.Claims;
 
-            if (context.User.Claims.First(c => c.Type == ClaimTypes.Role).Value == Administrator.ROLE_NAME)
+            //  Validate is administartor
+            if (!int.TryParse(claims.First(c => c.Type == ClaimTypes.PrimarySid).Value, out int id))
+                return;
+
+            //  Validate token for is signned in
+            var token = claims.First(c => c.Type == ClaimTypes.Hash).Value;
+            var tokenExist = await CheckTokenOfAdministratorAsync(token);
+            if (!tokenExist)
+            {
+                context.Fail();
+                return;
+            }
+
+            if (claims.First(c => c.Type == ClaimTypes.Role).Value == Administrator.ROLE_NAME)
                 context.Succeed(requirement);
 
-            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// check token is variable by token from claim
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private async Task<bool> CheckTokenOfAdministratorAsync(string token)
+        {
+            return await _db.Users.AnyAsync(user => user.IsAdmin && user.Token == token);
         }
     }
 }

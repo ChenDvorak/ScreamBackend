@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Accounts.Authorizations;
 
 namespace Accounts
 {
@@ -23,8 +24,11 @@ namespace Accounts
 
             var claims = new[]
             {
+                //  Required
                 new Claim(ClaimTypes.PrimarySid, Model.Id.ToString(), null, AccountAuthorization.Issuer),
+                //  Required
                 new Claim(ClaimTypes.Role, ROLE_NAME, null, AccountAuthorization.Issuer),
+                //  Required
                 new Claim(ClaimTypes.Hash, Model.Token, null, AccountAuthorization.Issuer)
             };
             return claims;

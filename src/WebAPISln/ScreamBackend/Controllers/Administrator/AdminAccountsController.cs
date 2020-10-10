@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ScreamBackend.Controllers.Administrator
 {
+    /// <summary>
+    /// operations of account of administrator 
+    /// </summary>
     public class AdminAccountsController : BaseAdministratorController
     {
 
