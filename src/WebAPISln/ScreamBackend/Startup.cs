@@ -16,6 +16,7 @@ using Infrastructures;
 using Screams;
 using Accounts;
 using ScreamBackend.ServicesExtension;
+using Accounts.Authorizations;
 
 namespace ScreamBackend
 {
